@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
   Building2, Target, ShieldCheck, Shield,
-  Download, Sparkles, Printer, Globe, Wallet, ArrowRight,
+  Download, Sparkles, Printer, Globe, ArrowRight,
   Info, Check, CheckCircle,
   Network, History, Briefcase,
-  Zap, MapPin, Users, Scale, BookOpen, GitBranch,
+  Zap, MapPin, Users, Scale, GitBranch,
   FileText, BarChart3, DollarSign, Settings, Presentation, Handshake, TrendingUp,
   Layers, Database, Calculator, Search, BarChart, PieChart, Activity, Cpu, AlertCircle,
   X, Plus, MessageCircle, Send, User
 } from 'lucide-react';
-import { ReportParameters, ReportData, GenerationPhase, CopilotInsight } from '../types';
+import { ReportParameters, ReportData, GenerationPhase, CopilotInsight, toolCategories } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface MainCanvasProps {
-  params: ReportParameters;
-  setParams: (params: ReportParameters) => void;
   reportData: ReportData;
   isGenerating: boolean;
   generationPhase: GenerationPhase;
@@ -25,6 +23,8 @@ interface MainCanvasProps {
   onDeleteReport: (id: string) => void;
   onNewAnalysis: () => void;
   onCopilotMessage?: (msg: CopilotInsight) => void;
+  params: ReportParameters;
+  setParams: (params: ReportParameters) => void;
   onChangeViewMode?: (mode: string) => void;
 }
 
@@ -57,6 +57,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
     params, setParams, onGenerate, onChangeViewMode
 }) => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [modalView, setModalView] = useState('main'); // 'main' or a specific tool id
   const [expandedSubsections, setExpandedSubsections] = useState<Record<string, boolean>>({});
   const [chatMessages, setChatMessages] = useState<Array<{text: string, sender: 'user' | 'bw', timestamp: Date}>>([
     { text: "Hello! I'm your BW Consultant. How can I help you with your partnership analysis today?", sender: 'bw', timestamp: new Date() }
@@ -65,88 +66,6 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
 
   const toggleSubsection = (key: string) => {
     setExpandedSubsections(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  // Tool definitions with at least 10 options per category
-  const toolCategories = {
-    identity: [
-      { id: 'entity-profile', icon: Building2, label: 'Entity Profile', description: 'Legal structure & registration' },
-      { id: 'capabilities', icon: Zap, label: 'Capabilities', description: 'Core competencies & resources' },
-      { id: 'market-positioning', icon: Target, label: 'Market Positioning', description: 'Competitive positioning strategy' },
-      { id: 'strategic-intent', icon: Sparkles, label: 'Strategic Intent', description: 'Vision, mission & objectives' },
-      { id: 'risk-appetite', icon: Shield, label: 'Risk Appetite', description: 'Risk tolerance framework' },
-      { id: 'financial-health', icon: DollarSign, label: 'Financial Health', description: 'Balance sheet & cash flow' },
-      { id: 'operational-scale', icon: Activity, label: 'Operational Scale', description: 'Headcount & infrastructure' },
-      { id: 'brand-assets', icon: Layers, label: 'Brand Assets', description: 'IP, trademarks & reputation' },
-      { id: 'stakeholder-map', icon: Network, label: 'Stakeholder Map', description: 'Key relationships & influence' },
-      { id: 'growth-metrics', icon: TrendingUp, label: 'Growth Metrics', description: 'Performance indicators' },
-      { id: 'custom-identity', icon: Plus, label: 'Add Custom', description: 'Define custom identity aspect' }
-    ],
-    mandate: [
-      { id: 'strategic-objectives', icon: Target, label: 'Strategic Objectives', description: 'Measurable goals & KPIs' },
-      { id: 'partner-profiling', icon: Users, label: 'Partner Profiling', description: 'Ideal partner characteristics' },
-      { id: 'value-proposition', icon: Handshake, label: 'Value Proposition', description: 'Mutual benefit framework' },
-      { id: 'negotiation-strategy', icon: Scale, label: 'Negotiation Strategy', description: 'Terms & conditions approach' },
-      { id: 'governance-model', icon: Settings, label: 'Governance Model', description: 'Decision-making structure' },
-      { id: 'integration-plan', icon: GitBranch, label: 'Integration Plan', description: 'Post-deal execution roadmap' },
-      { id: 'timeline-roadmap', icon: History, label: 'Timeline Roadmap', description: 'Key milestones & deadlines' },
-      { id: 'success-criteria', icon: CheckCircle, label: 'Success Criteria', description: 'Win conditions & metrics' },
-      { id: 'resource-allocation', icon: Briefcase, label: 'Resource Allocation', description: 'Budget & team assignment' },
-      { id: 'communication-plan', icon: MessageCircle, label: 'Communication Plan', description: 'Stakeholder engagement' },
-      { id: 'custom-mandate', icon: Plus, label: 'Add Custom', description: 'Define custom mandate element' }
-    ],
-    market: [
-      { id: 'target-markets', icon: Globe, label: 'Target Markets', description: 'Geographic & demographic focus' },
-      { id: 'competitive-analysis', icon: BarChart, label: 'Competitive Analysis', description: 'Market share & positioning' },
-      { id: 'customer-segmentation', icon: Users, label: 'Customer Segmentation', description: 'Target customer profiles' },
-      { id: 'regulatory-landscape', icon: ShieldCheck, label: 'Regulatory Landscape', description: 'Legal & compliance framework' },
-      { id: 'economic-indicators', icon: DollarSign, label: 'Economic Indicators', description: 'Market size & growth rates' },
-      { id: 'technology-trends', icon: Cpu, label: 'Technology Trends', description: 'Innovation & disruption factors' },
-      { id: 'geopolitical-factors', icon: MapPin, label: 'Geopolitical Factors', description: 'Political & cultural risks' },
-      { id: 'supply-chain', icon: Network, label: 'Supply Chain', description: 'Logistics & distribution networks' },
-      { id: 'pricing-strategy', icon: Calculator, label: 'Pricing Strategy', description: 'Revenue models & margins' },
-      { id: 'market-entry', icon: ArrowRight, label: 'Market Entry Strategy', description: 'Go-to-market approach' },
-      { id: 'custom-market', icon: Plus, label: 'Add Custom', description: 'Define custom market factor' }
-    ],
-    risk: [
-      { id: 'risk-assessment', icon: AlertCircle, label: 'Risk Assessment', description: 'Identify & evaluate risks' },
-      { id: 'mitigation-strategies', icon: Shield, label: 'Mitigation Strategies', description: 'Risk reduction approaches' },
-      { id: 'monitoring-framework', icon: Activity, label: 'Monitoring Framework', description: 'Ongoing risk tracking' },
-      { id: 'contingency-planning', icon: History, label: 'Contingency Planning', description: 'Backup plans & scenarios' },
-      { id: 'insurance-coverage', icon: ShieldCheck, label: 'Insurance Coverage', description: 'Risk transfer mechanisms' },
-      { id: 'legal-liability', icon: Scale, label: 'Legal Liability', description: 'Contractual & regulatory risks' },
-      { id: 'financial-exposure', icon: DollarSign, label: 'Financial Exposure', description: 'Capital at risk analysis' },
-      { id: 'operational-risks', icon: Settings, label: 'Operational Risks', description: 'Process & execution risks' },
-      { id: 'reputational-risks', icon: Users, label: 'Reputational Risks', description: 'Brand & stakeholder impact' },
-      { id: 'cybersecurity', icon: Shield, label: 'Cybersecurity', description: 'Digital security assessment' },
-      { id: 'custom-risk', icon: Plus, label: 'Add Custom', description: 'Define custom risk category' }
-    ],
-    analysis: [
-      { id: 'predictive-growth', icon: TrendingUp, label: 'Predictive Growth', description: 'AI-driven market forecasting' },
-      { id: 'scenario-planning', icon: Calculator, label: 'Scenario Planning', description: 'Multi-outcome modeling' },
-      { id: 'partnership-analyzer', icon: Network, label: 'Partnership Analyzer', description: 'Existing relationship assessment' },
-      { id: 'ai-recommendations', icon: Sparkles, label: 'AI Recommendations', description: 'Machine learning insights' },
-      { id: 'roi-diagnostic', icon: Target, label: 'ROI Diagnostic', description: 'Return on investment analysis' },
-      { id: 'global-comparison', icon: Globe, label: 'Global Comparison', description: 'Cross-market opportunity analysis' },
-      { id: 'competitive-intelligence', icon: BarChart3, label: 'Competitive Intelligence', description: 'Market positioning analysis' },
-      { id: 'real-time-monitoring', icon: Activity, label: 'Real-time Monitoring', description: 'Live market intelligence' },
-      { id: 'financial-modeling', icon: PieChart, label: 'Financial Modeling', description: '5-year projections & valuations' },
-      { id: 'due-diligence', icon: Briefcase, label: 'Due Diligence Engine', description: 'Automated background checks' },
-      { id: 'custom-analysis', icon: Plus, label: 'Add Custom', description: 'Define custom analysis tool' }
-    ],
-    marketplace: [
-      { id: 'deal-marketplace', icon: TrendingUp, label: 'Deal Marketplace', description: 'Live partnership opportunities' },
-      { id: 'compatibility-engine', icon: Handshake, label: 'Compatibility Engine', description: 'Synergy scoring algorithm' },
-      { id: 'global-comparison', icon: Globe, label: 'Global Comparison', description: 'Cross-market analytics' },
-      { id: 'partnership-repository', icon: Database, label: 'Partnership Repository', description: 'Knowledge base management' },
-      { id: 'partner-search', icon: Search, label: 'Partner Search', description: 'Advanced partner discovery' },
-      { id: 'deal-pipeline', icon: Briefcase, label: 'Deal Pipeline', description: 'Track negotiation progress' },
-      { id: 'network-mapping', icon: Network, label: 'Network Mapping', description: 'Visual relationship networks' },
-      { id: 'valuation-engine', icon: DollarSign, label: 'Valuation Engine', description: 'Partnership valuation tools' },
-      { id: 'negotiation-advisor', icon: Scale, label: 'Negotiation Advisor', description: 'Strategic negotiation support' },
-      { id: 'success-metrics', icon: CheckCircle, label: 'Success Metrics', description: 'Partnership performance tracking' },
-      { id: 'custom-marketplace', icon: Plus, label: 'Add Custom', description: 'Define custom marketplace tool' }
-    ]
   };
 
   const handleSendMessage = () => {
@@ -162,6 +81,12 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
       }, 1000);
     }
   };
+
+  const openModal = (id: string) => {
+    setActiveModal(id);
+    setModalView('main'); // Reset to main view whenever a new modal is opened
+  };
+
 
   const renderActiveModalContent = () => {
     // This function will return the form content based on the activeModal state.
@@ -191,7 +116,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                         ].map(section => (
                             <button
                                 key={section.id}
-                                onClick={() => setActiveModal(section.id)}
+                                onClick={() => openModal(section.id)}
                                 className={`p-3 bg-white border rounded-lg hover:shadow-md transition-all text-left group ${
                                     activeModal === section.id
                                         ? 'border-bw-navy shadow-md'
@@ -259,7 +184,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                     <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-3">Document Generation Suite</h3>
                     <div className="grid grid-cols-2 gap-3">
                         <button
-                            onClick={() => setActiveModal('doc-suite')}
+                            onClick={() => openModal('doc-suite')}
                             className="p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all text-left group"
                         >
                             <div className="flex items-center gap-2 mb-1">
@@ -270,7 +195,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                         </button>
 
                         <button
-                            onClick={() => setActiveModal('doc-summary')}
+                            onClick={() => openModal('doc-summary')}
                             className="p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all text-left group"
                         >
                             <div className="flex items-center gap-2 mb-1">
@@ -281,7 +206,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                         </button>
 
                         <button
-                            onClick={() => setActiveModal('doc-bi')}
+                            onClick={() => openModal('doc-bi')}
                             className="p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all text-left group"
                         >
                             <div className="flex items-center gap-2 mb-1">
@@ -292,7 +217,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                         </button>
 
                          <button
-                            onClick={() => setActiveModal('doc-analyzer')}
+                            onClick={() => openModal('doc-analyzer')}
                             className="p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all text-left group"
                         >
                             <div className="flex items-center gap-2 mb-1">
@@ -309,7 +234,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                     <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-3">Letter Generation Suite</h3>
                     <div className="grid grid-cols-2 gap-3">
                         <button
-                            onClick={() => setActiveModal('letter-loi')}
+                            onClick={() => openModal('letter-loi')}
                             className="p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-green-300 transition-all text-left group"
                         >
                             <div className="flex items-center gap-2 mb-1">
@@ -319,7 +244,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                             <p className="text-[10px] text-stone-600">Draft a formal LOI document</p>
                         </button>
                         <button
-                            onClick={() => setActiveModal('letter-termsheet')}
+                            onClick={() => openModal('letter-termsheet')}
                             className="p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-green-300 transition-all text-left group"
                         >
                             <div className="flex items-center gap-2 mb-1">
@@ -329,7 +254,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                             <p className="text-[10px] text-stone-600">Outline key deal terms</p>
                         </button>
                         <button
-                            onClick={() => setActiveModal('letter-mou')}
+                            onClick={() => openModal('letter-mou')}
                             className="p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-green-300 transition-all text-left group"
                         >
                             <div className="flex items-center gap-2 mb-1">
@@ -339,7 +264,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                             <p className="text-[10px] text-stone-600">Generate a memorandum</p>
                         </button>
                         <button
-                            onClick={() => setActiveModal('letter-proposal')}
+                            onClick={() => openModal('letter-proposal')}
                             className="p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-green-300 transition-all text-left group"
                         >
                             <div className="flex items-center gap-2 mb-1">
@@ -372,7 +297,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="p-6 border-b border-stone-200 flex items-center justify-between shrink-0">
-                            <h2 className="text-2xl font-serif font-bold text-bw-navy capitalize">{activeModal} Configuration</h2>
+                            <h2 className="text-2xl font-serif font-bold text-bw-navy capitalize">{activeModal?.replace(/-/g, ' ')} Configuration</h2>
                             <button onClick={() => setActiveModal(null)} className="p-2 rounded-full hover:bg-stone-100">
                                 <X size={20} className="text-stone-500" />
                             </button>
@@ -887,10 +812,10 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                     </CollapsibleSection>
                                 </div>
                             )}
-                             {activeModal === 'analysis' && (
+                             {activeModal === 'analysis' && modalView === 'main' && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {toolCategories.analysis.map(tool => (
-                                        <button key={tool.id} className="p-4 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all text-left group">
+                                        <button key={tool.id} onClick={() => setModalView(tool.id)} className="p-4 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all text-left group">
                                             <div className="flex items-center gap-3 mb-2">
                                                 <tool.icon className="w-6 h-6 text-indigo-600" />
                                                 <span className="text-sm font-bold text-stone-900">{tool.label}</span>
@@ -900,10 +825,40 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                     ))}
                                 </div>
                             )}
-                            {activeModal === 'marketplace' && (
+                            {activeModal === 'analysis' && modalView === 'roi-diagnostic' && (
+                                <div>
+                                    <button onClick={() => setModalView('main')} className="text-sm text-blue-600 mb-4">&larr; Back to Analysis Tools</button>
+                                    <h3 className="text-lg font-bold mb-4">ROI Diagnostic Configuration</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Estimated Initial Investment ($)</label>
+                                            <input type="number" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., 500000"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Projected Annual Revenue ($)</label>
+                                            <input type="number" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., 200000"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Operational Costs ($/year)</label>
+                                            <input type="number" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., 75000"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {activeModal === 'analysis' && modalView === 'due-diligence' && (
+                                <div>
+                                    <button onClick={() => setModalView('main')} className="text-sm text-blue-600 mb-4">&larr; Back to Analysis Tools</button>
+                                    <h3 className="text-lg font-bold mb-4">Due Diligence Engine</h3>
+                                    <div className="space-y-4">
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Target Company Name</label>
+                                        <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="Enter company name to run due diligence on"/>
+                                    </div>
+                                </div>
+                            )}
+                            {activeModal === 'marketplace' && modalView === 'main' && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {toolCategories.marketplace.map(tool => (
-                                        <button key={tool.id} className="p-4 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-pink-300 transition-all text-left group">
+                                        <button key={tool.id} onClick={() => setModalView(tool.id)} className="p-4 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-pink-300 transition-all text-left group">
                                             <div className="flex items-center gap-3 mb-2">
                                                 <tool.icon className="w-6 h-6 text-pink-600" />
                                                 <span className="text-sm font-bold text-stone-900">{tool.label}</span>
@@ -934,31 +889,109 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                     </CollapsibleSection>
                                 </div>
                             )}
-                            {/* Placeholder for other modals */}
-                            {activeModal && !['identity', 'mandate', 'market', 'risk', 'generation', 'analysis', 'marketplace'].includes(activeModal) && (
-                                <div className="text-center text-stone-400 p-16">
-                                    <h3 className="text-lg font-bold text-stone-700 mb-2">Configure {activeModal}</h3>
-                                    <p>Configuration options for this tool would appear here.</p>
-                                    <div className="mt-4 space-y-2 text-left max-w-sm mx-auto">
-                                        <label className="flex items-center gap-2">
-                                            <input type="checkbox" /> Option 1
-                                        </label>
-                                        <label className="flex items-center gap-2">
-                                            <input type="checkbox" /> Option 2
-                                        </label>
-                                        <div>
-                                            <label className="block text-xs font-bold text-stone-700 mb-1">Custom Parameter</label>
-                                            <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="Enter value..."/>
+                            {/* --- DOCUMENT & LETTER GENERATION MODALS --- */}
+                            {activeModal === 'doc-summary' && (
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">Target Audience</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                            <option>Investor</option>
+                                            <option>Executive</option>
+                                            <option>Legal</option>
+                                            <option>Technical</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">Key Sections to Emphasize</label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {["Market Opportunity", "Financial Projections", "Risk Mitigation", "Team Strength"].map(sec => (
+                                                <label key={sec} className="flex items-center gap-2 p-2 border rounded-md hover:bg-stone-50 cursor-pointer">
+                                                    <input type="checkbox" className="h-4 w-4 text-bw-navy focus:ring-bw-gold"/>
+                                                    <span className="text-sm">{sec}</span>
+                                                </label>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
                             )}
+                            {activeModal === 'letter-loi' && (
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">Key Clauses</label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {["Binding", "Non-binding", "Confidentiality", "Exclusivity", "Termination"].map(clause => (
+                                                <label key={clause} className="flex items-center gap-2 p-2 border rounded-md hover:bg-stone-50 cursor-pointer">
+                                                    <input type="checkbox" className="h-4 w-4 text-bw-navy focus:ring-bw-gold"/>
+                                                    <span className="text-sm">{clause} Clause</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-1">Exclusivity Period (days)</label>
+                                        <input type="number" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., 90"/>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-1">Governing Law (Jurisdiction)</label>
+                                        <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., State of Delaware, USA"/>
+                                    </div>
+                                </div>
+                            )}
+                            {activeModal === 'letter-termsheet' && (
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-1">Valuation ($)</label>
+                                        <input type="number" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., 10000000"/>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-1">Investment Amount ($)</label>
+                                        <input type="number" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., 2000000"/>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-1">Liquidation Preference</label>
+                                        <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., 1x, Non-participating"/>
+                                    </div>
+                                </div>
+                            )}
+                            {/* Add-in Toolbar Modals */}
+                            {activeModal === 'add-pie-chart' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Add Pie Chart</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Chart Title</label>
+                                            <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., Market Share Distribution"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Data Source</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Industry Breakdown</option>
+                                                <option>Competitor Market Share</option>
+                                                <option>Funding Source Mix</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {/* Placeholder for other modals */}
+                            {activeModal && !['identity', 'mandate', 'market', 'risk', 'generation', 'analysis', 'marketplace', 'doc-summary', 'letter-loi', 'letter-termsheet', 'add-pie-chart'].includes(activeModal) && (
+                                <div className="text-center text-stone-400 p-16">
+                                    <h3 className="text-lg font-bold text-stone-700 mb-2">Configure {activeModal.replace(/-/g, ' ')}</h3>
+                                    <p>Configuration options for this tool would appear here.</p>
+                                </div>
+                            )}
                         </div>
                         {/* Modal Footer */}
-                        <div className="p-4 bg-stone-50 border-t border-stone-200 flex justify-end shrink-0">
-                            <button onClick={() => setActiveModal(null)} className="px-6 py-2 bg-bw-navy text-white text-sm font-bold rounded shadow-lg hover:bg-stone-800 transition-all">
-                                Save & Close
-                            </button>
+                        <div className="p-4 bg-stone-50 border-t border-stone-200 flex justify-end items-center gap-4 shrink-0">
+                            {['doc-suite', 'doc-summary', 'letter-loi', 'letter-termsheet', 'letter-mou', 'letter-proposal', 'doc-bi', 'doc-analyzer', 'add-pie-chart'].includes(activeModal || '') ? (
+                                <button onClick={() => { /* Add generation/add logic here */ setActiveModal(null); }} className="px-6 py-2 bg-green-600 text-white text-sm font-bold rounded shadow-lg hover:bg-green-700 transition-all">
+                                    {activeModal?.startsWith('add-') ? 'Add to Report' : 'Generate Document'}
+                                </button>
+                            ) : (
+                                <button onClick={() => setActiveModal(null)} className="px-6 py-2 bg-bw-navy text-white text-sm font-bold rounded shadow-lg hover:bg-stone-800 transition-all">
+                                    Close
+                                </button>
+                            )}
                         </div>
                     </motion.div>
                 </motion.div>
@@ -995,12 +1028,12 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                 <div className="absolute top-8 right-8 flex flex-col gap-2 z-20">
                     {[
                         { icon: PieChart, label: 'Add Pie Chart' },
-                        { icon: BarChart3, label: 'Add Bar Chart' },
+                        { icon: BarChart, label: 'Add Bar Chart' },
                         { icon: Network, label: 'Add Network Graph' },
                         { icon: Database, label: 'Add Data Table' },
                         { icon: Cpu, label: 'Add AI Analysis Module' },
                     ].map(tool => (
-                        <button key={tool.label} title={tool.label} className="p-3 bg-white/80 backdrop-blur-sm border border-stone-200 rounded-full shadow-lg hover:bg-bw-navy hover:text-white text-stone-600 transition-all">
+                        <button key={tool.label} onClick={() => openModal(`add-${tool.label.toLowerCase().replace(/ /g, '-')}`)} title={tool.label} className="p-3 bg-white/80 backdrop-blur-sm border border-stone-200 rounded-full shadow-lg hover:bg-bw-navy hover:text-white text-stone-600 transition-all">
                             <tool.icon size={18} />
                         </button>
                     ))}
