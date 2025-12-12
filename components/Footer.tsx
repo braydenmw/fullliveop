@@ -47,28 +47,68 @@ export const Footer: React.FC = () => {
 
   const TermsContent = () => (
     <div className="space-y-8">
-      {/* System Overview */}
-      <div>
-        <h3 className="text-xl font-serif font-bold text-bw-gold mb-2">BW Nexus AI System Overview</h3>
-        <p className="text-sm text-gray-400 mb-6">7-Stage Strategic Intelligence Platform | Version 4.1</p>
+      {/* How to Use and Terms of Usage side by side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* How to Use - System Overview */}
+        <div>
+          <h3 className="text-xl font-serif font-bold text-bw-gold mb-2">How to Use</h3>
+          <p className="text-sm text-gray-400 mb-6">BW Nexus AI System Overview | 7-Stage Strategic Intelligence Platform | Version 4.1</p>
 
-        <div className="space-y-6 text-sm text-gray-300">
-          <div className="border border-gray-700 rounded-lg p-4 bg-gray-800/50">
-            <h4 className="font-bold text-bw-gold mb-2 text-lg">01 Input Context</h4>
-            <p className="mb-2"><strong className="text-white">What it is:</strong> This is the foundational data-gathering phase. You will be guided through the "Primary Steps" (Identity, Mandate, Market, Risk) to build a comprehensive profile of your strategic goals.</p>
-            <p><strong className="text-white">What you get:</strong> A complete, data-rich draft of your Strategic Roadmap that populates in real-time, serving as the single source of truth for all subsequent analysis.</p>
+          <div className="space-y-6 text-sm text-gray-300">
+            <div className="border border-gray-700 rounded-lg p-4 bg-gray-800/50">
+              <h4 className="font-bold text-bw-gold mb-2 text-lg">01 Input Context</h4>
+              <p className="mb-2"><strong className="text-white">What it is:</strong> This is the foundational data-gathering phase. You will be guided through the "Primary Steps" (Identity, Mandate, Market, Risk) to build a comprehensive profile of your strategic goals.</p>
+              <p><strong className="text-white">What you get:</strong> A complete, data-rich draft of your Strategic Roadmap that populates in real-time, serving as the single source of truth for all subsequent analysis.</p>
+            </div>
+
+            <div className="border border-gray-700 rounded-lg p-4 bg-gray-800/50">
+              <h4 className="font-bold text-bw-gold mb-2 text-lg">02 Analytical Processing</h4>
+              <p className="mb-2"><strong className="text-white">What it is:</strong> The interactive analysis phase where you leverage the system's core intelligence. Here you can stress-test your strategy and uncover hidden insights using a suite of powerful analytical tools.</p>
+              <p><strong className="text-white">What you get:</strong> Deeper, actionable insights by modeling financial outcomes with the "ROI Diagnostic", exploring possibilities with the "Scenario Planner", or scoring potential partners with the "Compatibility Engine".</p>
+            </div>
+
+            <div className="border border-gray-700 rounded-lg p-4 bg-gray-800/50">
+              <h4 className="font-bold text-bw-gold mb-2 text-lg">03 Report Generation</h4>
+              <p className="mb-2"><strong className="text-white">What it is:</strong> The final output stage where you transition from the live draft to generating a suite of official, stakeholder-ready documents.</p>
+              <p><strong className="text-white">What you get:</strong> After accepting the finalized draft, you unlock a comprehensive menu to generate tangible artifacts like a Full Strategic Dossier, Financial Models, and formal Letters of Intent, all tailored to specific audiences.</p>
+            </div>
           </div>
+        </div>
 
-          <div className="border border-gray-700 rounded-lg p-4 bg-gray-800/50">
-            <h4 className="font-bold text-bw-gold mb-2 text-lg">02 Analytical Processing</h4>
-            <p className="mb-2"><strong className="text-white">What it is:</strong> The interactive analysis phase where you leverage the system's core intelligence. Here you can stress-test your strategy and uncover hidden insights using a suite of powerful analytical tools.</p>
-            <p><strong className="text-white">What you get:</strong> Deeper, actionable insights by modeling financial outcomes with the "ROI Diagnostic", exploring possibilities with the "Scenario Planner", or scoring potential partners with the "Compatibility Engine".</p>
-          </div>
+        {/* Terms of Usage - Legal Agreement */}
+        <div>
+          <h3 className="text-xl font-serif font-bold text-bw-gold mb-2">Terms of Usage</h3>
+          <p className="text-sm text-gray-400 mb-4">Legal Agreement | Terms and Conditions of Service | Effective May 2025</p>
 
-          <div className="border border-gray-700 rounded-lg p-4 bg-gray-800/50">
-            <h4 className="font-bold text-bw-gold mb-2 text-lg">03 Report Generation</h4>
-            <p className="mb-2"><strong className="text-white">What it is:</strong> The final output stage where you transition from the live draft to generating a suite of official, stakeholder-ready documents.</p>
-            <p><strong className="text-white">What you get:</strong> After accepting the finalized draft, you unlock a comprehensive menu to generate tangible artifacts like a Full Strategic Dossier, Financial Models, and formal Letters of Intent, all tailored to specific audiences.</p>
+          <div className="space-y-6 text-sm text-gray-300">
+            <div>
+              <strong className="text-white block mb-1">1. Authorized Use & Access Protocols</strong>
+              <p>This system is strictly for authorized strategic analysis. Access rights and data depth are calibrated to the user's declared Skill Level (Novice, Experienced, Expert). All inputs, including custom entity data, are processed via secure enterprise gateways. Unlawful data injection is prohibited.</p>
+            </div>
+            <div>
+              <strong className="text-white block mb-1">2. Decision Support & Authority</strong>
+              <p>BW Global Advisory provides insights for informational purposes. The Nexus OS outputs are probabilistic. Users operating at 'Novice' levels should verify insights with 'Expert' domain holders. Strategic decisions remain the sole responsibility of the user.</p>
+            </div>
+            <div>
+              <strong className="text-white block mb-1">3. Data Privacy & Sovereignty</strong>
+              <p>We adhere to strict GDPR and local data sovereignty laws. Custom operational data (Revenue, Headcount) and specific strategic intents are isolated. No user-specific data is used to train public foundation models.</p>
+            </div>
+            <div>
+              <strong className="text-white block mb-1">4. Financial & Operational Models</strong>
+              <p>The SCF (Strategic Cash Flow) and IVAS (Investment Viability Assessment) models are simulations based on provided Operational Scale and historical benchmarks. They do not constitute financial advice and scale dynamically with input granularity.</p>
+            </div>
+            <div>
+              <strong className="text-white block mb-1">5. Historical Context & Deep-Wave Data</strong>
+              <p>The system utilizes a proprietary dataset spanning ~1925-2025 (100 Years) to identify long-wave economic cycles and failure patterns. Users acknowledge that while this deep-context historical data provides robust precedent analysis, it does not guarantee future performance in volatile markets. Past performance is a calculated indicator, not a guarantee of future results.</p>
+            </div>
+            <div>
+              <strong className="text-white block mb-1">6. Autonomous Agent Liability</strong>
+              <p>The system deploys semi-autonomous AI agents ("Scout", "Diplomat", "Strategist") to construct intelligence dossiers. While these agents operate within strict ethical guardrails, their outputs are generative. Users must validate critical data points, particularly regarding real-time regulatory changes.</p>
+            </div>
+            <div>
+              <strong className="text-white block mb-1">7. Neuro-Symbolic Logic Gatekeepers</strong>
+              <p>The "Gatekeeper Protocol" enforces logical consistency checks on user inputs. The system reserves the right to halt analysis if inputs contradict established economic physics or fail the 100-Point checklist, ensuring integrity of the final dossier.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -110,43 +150,6 @@ export const Footer: React.FC = () => {
           <div>
             <strong className="text-white block mb-1">8. Logical Integrity Protocol</strong>
             <p>The Neuro-Symbolic core enforces logical consistency. The system will flag or halt processes if user inputs fundamentally contradict established economic principles or fail data integrity checks.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Legal Agreement */}
-      <div className="border-t border-gray-700 pt-6">
-        <h3 className="text-xl font-serif font-bold text-bw-gold mb-2">Legal Agreement</h3>
-        <p className="text-sm text-gray-400 mb-4">Terms and Conditions of Service | Effective May 2025</p>
-
-        <div className="space-y-6 text-sm text-gray-300">
-          <div>
-            <strong className="text-white block mb-1">1. Authorized Use & Access Protocols</strong>
-            <p>This system is strictly for authorized strategic analysis. Access rights and data depth are calibrated to the user's declared Skill Level (Novice, Experienced, Expert). All inputs, including custom entity data, are processed via secure enterprise gateways. Unlawful data injection is prohibited.</p>
-          </div>
-          <div>
-            <strong className="text-white block mb-1">2. Decision Support & Authority</strong>
-            <p>BW Global Advisory provides insights for informational purposes. The Nexus OS outputs are probabilistic. Users operating at 'Novice' levels should verify insights with 'Expert' domain holders. Strategic decisions remain the sole responsibility of the user.</p>
-          </div>
-          <div>
-            <strong className="text-white block mb-1">3. Data Privacy & Sovereignty</strong>
-            <p>We adhere to strict GDPR and local data sovereignty laws. Custom operational data (Revenue, Headcount) and specific strategic intents are isolated. No user-specific data is used to train public foundation models.</p>
-          </div>
-          <div>
-            <strong className="text-white block mb-1">4. Financial & Operational Models</strong>
-            <p>The SCF (Strategic Cash Flow) and IVAS (Investment Viability Assessment) models are simulations based on provided Operational Scale and historical benchmarks. They do not constitute financial advice and scale dynamically with input granularity.</p>
-          </div>
-          <div>
-            <strong className="text-white block mb-1">5. Historical Context & Deep-Wave Data</strong>
-            <p>The system utilizes a proprietary dataset spanning ~1925-2025 (100 Years) to identify long-wave economic cycles and failure patterns. Users acknowledge that while this deep-context historical data provides robust precedent analysis, it does not guarantee future performance in volatile markets. Past performance is a calculated indicator, not a guarantee of future results.</p>
-          </div>
-          <div>
-            <strong className="text-white block mb-1">6. Autonomous Agent Liability</strong>
-            <p>The system deploys semi-autonomous AI agents ("Scout", "Diplomat", "Strategist") to construct intelligence dossiers. While these agents operate within strict ethical guardrails, their outputs are generative. Users must validate critical data points, particularly regarding real-time regulatory changes.</p>
-          </div>
-          <div>
-            <strong className="text-white block mb-1">7. Neuro-Symbolic Logic Gatekeepers</strong>
-            <p>The "Gatekeeper Protocol" enforces logical consistency checks on user inputs. The system reserves the right to halt analysis if inputs contradict established economic physics or fail the 100-Point checklist, ensuring integrity of the final dossier.</p>
           </div>
         </div>
       </div>
