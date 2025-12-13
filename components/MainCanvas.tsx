@@ -73,6 +73,10 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
     costs: '75000'
   });
   const [generationConfig, setGenerationConfig] = useState<any>({});
+  const [isDraftFinalized, setIsDraftFinalized] = useState(false);
+  const [showFinalizationModal, setShowFinalizationModal] = useState(false);
+  const [selectedFinalReports, setSelectedFinalReports] = useState<string[]>([]);
+  const [generatedDocs, setGeneratedDocs] = useState<{id: string, title: string, desc: string, timestamp: Date}[]>([]);
 
 
   const [chatMessages, setChatMessages] = useState<Array<{text: string, sender: 'user' | 'bw', timestamp: Date}>>([
@@ -112,11 +116,22 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
   };
 
   const openModal = (id: string) => {
+    if (id === 'generation') {
+      setIsDraftFinalized(true);
+      setChatMessages(prev => [...prev, {
+        text: "The draft has been compiled based on your inputs. Please review the Strategic Roadmap on the right. When you are ready, accept the draft to proceed to the official report selection.",
+        sender: 'bw',
+        timestamp: new Date()
+      }]);
+      return;
+    }
     setActiveModal(id);
     setValidationErrors([]); // Clear previous errors
     setGenerationConfig({}); // Clear previous generation config
     setModalView('main'); // Reset to main view whenever a new modal is opened
   };
+
+  // ... (other handlers remain the same)
 
   const handleAddChart = () => {
     if (chartConfig.title && chartConfig.dataSource) {
@@ -127,6 +142,33 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
       // Basic validation for chart config
       alert('Please provide a title and select a data source.');
     }
+  };
+
+  const handleFinalReportSelection = (reportId: string) => {
+    setSelectedFinalReports(prev => 
+      prev.includes(reportId) 
+        ? prev.filter(id => id !== reportId) 
+        : [...prev, reportId]
+    );
+  };
+
+  const handleGenerateFinalDocs = () => {
+    const reportsToGenerate = allReports.filter(report => selectedFinalReports.includes(report.id));
+    
+    const newDocs = reportsToGenerate.map(report => ({
+      ...report,
+      timestamp: new Date()
+    }));
+
+    setGeneratedDocs(prev => [...newDocs, ...prev]);
+
+    setShowFinalizationModal(false);
+    setIsDraftFinalized(false); // Reset the state
+    setSelectedFinalReports([]);
+
+    // In a real app, you would call a service for each report.
+    // For now, we just show a confirmation.
+    alert(`Generating ${selectedFinalReports.length} official documents.`);
   };
 
   const handleGenerateDocument = () => {
@@ -242,15 +284,14 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                 {/* Section Navigation */}
                 <div>
                     <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-3">Primary Steps</h3>
+                    <p className="text-xs text-stone-500 mb-4">Follow these steps sequentially to build the data foundation for your strategic analysis. Each completed step enriches the live document preview on the right.</p>
                     <div className="grid grid-cols-2 gap-3">
                         {[
                             {id: 'identity', label: '01. Identity', description: "Define your organization's profile", icon: Building2, color: 'text-blue-600'},
                             {id: 'mandate', label: '02. Mandate', description: 'Outline partnership objectives', icon: Target, color: 'text-green-600'},
                             {id: 'market', label: '03. Market', description: 'Analyze the target market', icon: Globe, color: 'text-purple-600'},
                             {id: 'risk', label: '04. Risk', description: 'Assess risks & mitigation', icon: Shield, color: 'text-red-600'},
-                            {id: 'analysis', label: '05. Analysis', description: 'Deeper strategic insights', icon: BarChart3, color: 'text-indigo-600'},
-                            {id: 'marketplace', label: '06. Marketplace', description: 'Discover opportunities', icon: Handshake, color: 'text-pink-600'},
-                            {id: 'generation', label: '07. Generation', description: 'Generate the final report', icon: FileText, color: 'text-orange-600'},
+                            {id: 'generation', label: '05. Generation', description: 'Generate the final report', icon: FileText, color: 'text-orange-600'},
                         ].map(section => (
                             <button
                                 key={section.id}
@@ -271,6 +312,37 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                 <p className="text-[10px] text-stone-600 pl-6">{section.description}</p>
                             </button>
                         ))}
+                    </div>
+                </div>
+
+                <div className="w-full h-px bg-stone-200"></div>
+
+                {/* Optional Intelligence Enhancements */}
+                <div>
+                    <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-3">Optional Intelligence Enhancements</h3>
+                    <p className="text-xs text-stone-500 mb-4">Add advanced analysis and marketplace intelligence to enrich your final report. Select as many as needed.</p>
+                    <div className="grid grid-cols-2 gap-3">
+                        <button
+                            onClick={() => openModal('analysis')}
+                            className="p-3 bg-gradient-to-r from-indigo-50 to-indigo-100 border border-indigo-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all text-left group"
+                        >
+                            <div className="flex items-center gap-2 mb-1">
+                                <BarChart3 className="w-5 h-5 text-indigo-600" />
+                                <span className="text-xs font-bold text-stone-900">Advanced Analysis</span>
+                            </div>
+                            <p className="text-[10px] text-stone-600">ROI diagnostics, scenario planning, due diligence</p>
+                        </button>
+
+                        <button
+                            onClick={() => openModal('marketplace')}
+                            className="p-3 bg-gradient-to-r from-pink-50 to-pink-100 border border-pink-200 rounded-lg hover:shadow-md hover:border-pink-300 transition-all text-left group"
+                        >
+                            <div className="flex items-center gap-2 mb-1">
+                                <Handshake className="w-5 h-5 text-pink-600" />
+                                <span className="text-xs font-bold text-stone-900">Marketplace Intelligence</span>
+                            </div>
+                            <p className="text-[10px] text-stone-600">Partner compatibility, opportunity discovery</p>
+                        </button>
                     </div>
                 </div>
 
@@ -323,6 +395,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                 {/* Document Generation Tools */}
                 <div>
                     <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-3">Document Generation Suite</h3>
+                    <p className="text-xs text-stone-500 mb-4">Once the Strategic Roadmap draft is finalized, use this suite to generate specific, official reports. Each tool leverages the complete dataset to create detailed documents tailored for different audiences and purposes.</p>
                     <div className="grid grid-cols-3 gap-3">
                         <button
                             onClick={() => openModal('doc-suite')}
@@ -403,6 +476,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                 {/* Letter Generation Tools */}
                 <div>
                     <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-3">Letter Generation Suite</h3>
+                    <p className="text-xs text-stone-500 mb-4">After finalizing your strategic dossier, generate formal letters and legal documents here. These outputs are pre-populated with the key terms, entities, and objectives from your analysis, ready for negotiation and engagement.</p>
                     <div className="grid grid-cols-3 gap-3">
                         <button
                             onClick={() => openModal('letter-loi')}
@@ -466,6 +540,29 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                         </button>
                     </div>
                 </div>
+
+                {generatedDocs.length > 0 && (
+                  <>
+                    <div className="w-full h-px bg-stone-200"></div>
+                    <div>
+                      <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-3">Generated Documents</h3>
+                      <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-2">
+                        {generatedDocs.map(doc => (
+                          <div key={doc.id} className="p-3 bg-white border border-stone-200 rounded-lg group">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <FileText size={14} className="text-green-600" />
+                                <span className="text-xs font-bold text-stone-800">{doc.title}</span>
+                              </div>
+                              <button className="px-2 py-1 text-[10px] font-bold bg-stone-100 text-stone-600 rounded hover:bg-stone-200 opacity-0 group-hover:opacity-100 transition-opacity">View</button>
+                            </div>
+                            <p className="text-[10px] text-stone-500 mt-1">{doc.timestamp.toLocaleTimeString()}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
             </div>
         </div>
 
@@ -1115,63 +1212,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                 </div>
                             )}
                              {activeModal === 'generation' && (
-                                <div className="space-y-4">
-                                    <CollapsibleSection
-                                        title="7.1 Report Generation"
-                                        description="Finalize and generate the intelligence report"
-                                        isExpanded={true}
-                                        onToggle={() => {}}
-                                        color="from-green-50 to-green-100"
-                                    >
-                                        <div className="p-4 space-y-6">
-                                            <div className="text-center">
-                                                <h4 className="font-bold text-lg text-stone-800">Finalize & Generate Reports</h4>
-                                                <p className="text-sm text-stone-600 mt-1">Your draft is complete. Select which official documents to generate based on your inputs.</p>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {[
-                                                    {id: 'dossier', title: 'Full Strategic Dossier', desc: 'The complete, multi-page report with all analyses.'},
-                                                    {id: 'exec-summary', title: 'Executive Summary', desc: 'A condensed 1-2 page overview for stakeholders.'},
-                                                    {id: 'financial-model', title: 'Financial Model', desc: 'Detailed 5-year projections, ROI, and cash flow.'},
-                                                    {id: 'risk-assessment', title: 'Risk Assessment', desc: 'In-depth analysis of risks and mitigation strategies.'},
-                                                    {id: 'partner-comparison', title: 'Partner Comparison Matrix', desc: 'Side-by-side analysis of potential partners.'},
-                                                    {id: 'diversification-report', title: 'Diversification Report', desc: 'Analysis of market concentration and new opportunities.'},
-                                                ].map(report => (
-                                                    <label key={report.id} className="p-4 border-2 rounded-lg cursor-pointer has-[:checked]:border-green-500 has-[:checked]:bg-green-50 transition-all">
-                                                        <div className="flex items-start gap-3">
-                                                            <input type="checkbox" className="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 border-stone-300 rounded"/>
-                                                            <div>
-                                                                <div className="font-bold text-stone-900">{report.title}</div>
-                                                                <p className="text-xs text-stone-600 mt-1">{report.desc}</p>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-                                                ))}
-                                            </div>
-
-                                            <div className="pt-4 border-t border-stone-200">
-                                                <button
-                                                    onClick={onGenerate}
-                                                    className="w-full px-8 py-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition-all flex items-center justify-center gap-2"
-                                                >
-                                                    <CheckCircle size={20} />
-                                                    Generate Official Documents
-                                                </button>
-                                            </div>
-                                        </div>
-                                        {/* <div className="text-center p-4">
-                                            <p className="text-stone-600 mb-4">All data has been collected. You are ready to generate the final report.</p>
-                                            <button
-                                                onClick={onGenerate}
-                                                className="px-8 py-3 bg-bw-navy text-white font-bold rounded-lg hover:bg-bw-gold hover:text-bw-navy transition-all"
-                                            >
-                                                Generate Intelligence Report
-                                            </button>
-                                        </div>
-                                        */}
-                                    </CollapsibleSection>
-                                </div>
+                                <p>This modal is now deprecated in favor of the new finalization workflow.</p>
                             )}
                             {/* --- DOCUMENT GENERATION SUITE MODALS --- */}
                             {activeModal === 'doc-summary' && ( // Executive Summary
@@ -1445,6 +1486,55 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
             )}
         </AnimatePresence>
 
+        {/* --- FINALIZATION MODAL --- */}
+        <AnimatePresence>
+            {showFinalizationModal && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-8"
+                    onClick={() => setShowFinalizationModal(false)}
+                >
+                    <motion.div
+                        initial={{ scale: 0.95, y: 20 }}
+                        animate={{ scale: 1, y: 0 }}
+                        exit={{ scale: 0.95, y: 20, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="p-6 border-b border-stone-200">
+                            <h2 className="text-2xl font-serif font-bold text-bw-navy">Official Report Selection</h2>
+                            <p className="text-sm text-stone-600 mt-1">Select which official documents to generate. Each will be created based on the finalized draft data.</p>
+                        </div>
+                        <div className="p-8 overflow-y-auto custom-scrollbar flex-1">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {allReports.map(report => (
+                                    <label key={report.id} className="p-4 border-2 rounded-lg cursor-pointer has-[:checked]:border-green-500 has-[:checked]:bg-green-50 transition-all">
+                                        <div className="flex items-start gap-3">
+                                            <input type="checkbox" checked={selectedFinalReports.includes(report.id)} onChange={() => handleFinalReportSelection(report.id)} className="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 border-stone-300 rounded"/>
+                                            <div>
+                                                <div className="font-bold text-stone-900">{report.title}</div>
+                                                <p className="text-xs text-stone-600 mt-1">{report.desc}</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="p-4 bg-stone-50 border-t border-stone-200 flex justify-end items-center gap-4 shrink-0">
+                            <button onClick={() => setShowFinalizationModal(false)} className="px-6 py-2 text-sm font-bold text-stone-600 hover:bg-stone-200 rounded">Cancel</button>
+                            <button onClick={handleGenerateFinalDocs} disabled={selectedFinalReports.length === 0} className="px-8 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <CheckCircle size={20} />
+                                Generate {selectedFinalReports.length} Official Document(s)
+                            </button>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+
         {/* --- RIGHT PANEL: THE ARTIFACT (OUTPUT) --- */}
         <div className="flex-1 bg-stone-200 relative flex flex-col items-center overflow-hidden" style={{ flexBasis: '70%' }}>
             {/* Toolbar Header */}
@@ -1577,6 +1667,17 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                         <span>Page 1 of 1</span>
                     </div>
                 </motion.div>
+
+                {isDraftFinalized && (
+                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+                        <button 
+                            onClick={() => setShowFinalizationModal(true)}
+                            className="px-8 py-4 bg-bw-gold text-bw-navy font-bold rounded-lg shadow-2xl hover:scale-105 transition-all flex items-center gap-3 animate-pulse"
+                        >
+                            <CheckCircle size={20} /> Accept Draft & Proceed to Report Selection
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     </div>
