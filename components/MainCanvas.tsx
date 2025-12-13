@@ -1829,8 +1829,382 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                     </div>
                                 </div>
                             )}
+                            {/* Enhanced Modal Implementations for Full Feature Capacity */}
+
+                            {/* Additional Document Generation Modals */}
+                            {activeModal === 'doc-suite' && (
+                                <div className="space-y-6">
+                                    <p className="text-sm text-stone-600">Generate comprehensive business documents including Letters of Intent, Memorandums of Understanding, partnership proposals, and formal business agreements.</p>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Document Type</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>Letter of Intent</option><option>Memorandum of Understanding</option><option>Partnership Proposal</option><option>Joint Venture Agreement</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Document Length</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>Brief (1-2 pages)</option><option>Standard (3-5 pages)</option><option>Detailed (5+ pages)</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Include Sections</label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {["Executive Summary", "Terms & Conditions", "Financial Projections", "Risk Assessment", "Governance Structure", "Exit Strategy"].map(sec => (
+                                                <label key={sec} className="flex items-center gap-2 p-2 border rounded-md hover:bg-stone-50 cursor-pointer">
+                                                    <input type="checkbox" className="h-4 w-4 text-bw-navy focus:ring-bw-gold"/>
+                                                    <span className="text-sm">{sec}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'doc-financial-model' && (
+                                <div className="space-y-6">
+                                    <p className="text-sm text-stone-600">Generate detailed financial models and projections for your partnership opportunity.</p>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Model Type</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>Revenue Projection Model</option><option>Cost-Benefit Analysis</option><option>Cash Flow Model</option><option>ROI Calculator</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Time Horizon</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>1 Year</option><option>3 Years</option><option>5 Years</option><option>10 Years</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Key Assumptions</label>
+                                        <textarea className="w-full p-2 border border-stone-200 rounded text-sm h-24" placeholder="Enter key financial assumptions..."/>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'doc-risk-assessment' && (
+                                <div className="space-y-6">
+                                    <p className="text-sm text-stone-600">Comprehensive risk assessment report identifying, analyzing, and providing mitigation strategies for partnership risks.</p>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Risk Categories to Include</label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {["Financial Risk", "Operational Risk", "Legal Risk", "Market Risk", "Reputational Risk", "Geopolitical Risk"].map(risk => (
+                                                <label key={risk} className="flex items-center gap-2 p-2 border rounded-md hover:bg-stone-50 cursor-pointer">
+                                                    <input type="checkbox" defaultChecked className="h-4 w-4 text-bw-navy focus:ring-bw-gold"/>
+                                                    <span className="text-sm">{risk}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Risk Assessment Depth</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>High Level Overview</option><option>Detailed Analysis</option><option>Comprehensive Assessment</option></select>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Additional Letter Generation Modals */}
+                            {activeModal === 'letter-jv' && (
+                                <div className="space-y-6">
+                                    <p className="text-sm text-stone-600">Generate a comprehensive Joint Venture Agreement outlining the terms, structure, and governance of the partnership.</p>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">JV Structure</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>50/50 Partnership</option><option>Majority/Minority</option><option>Limited Partnership</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Governance Model</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>Joint Board</option><option>Lead Partner Control</option><option>Independent Chairman</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Key Terms</label>
+                                        <textarea className="w-full p-2 border border-stone-200 rounded text-sm h-24" placeholder="Specify key JV terms..."/>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'letter-nda' && (
+                                <div className="space-y-6">
+                                    <p className="text-sm text-stone-600">Create a comprehensive Non-Disclosure Agreement to protect confidential information shared during partnership discussions.</p>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Confidentiality Scope</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>All Information</option><option>Specified Information Only</option><option>Business Information</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Term Length</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>1 Year</option><option>2 Years</option><option>5 Years</option><option>Indefinite</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Permitted Disclosures</label>
+                                        <textarea className="w-full p-2 border border-stone-200 rounded text-sm h-24" placeholder="Specify exceptions to confidentiality..."/>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'letter-licensing' && (
+                                <div className="space-y-6">
+                                    <p className="text-sm text-stone-600">Generate licensing agreements for intellectual property, technology, or brand usage rights.</p>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">License Type</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>Exclusive License</option><option>Non-Exclusive License</option><option>Sole License</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Royalty Structure</label>
+                                        <select className="w-full p-2 border border-stone-200 rounded text-sm"><option>Percentage of Revenue</option><option>Fixed Fee</option><option>Milestone Payments</option></select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-stone-700 mb-1">Territory</label>
+                                        <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="Specify geographic territory..."/>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Enhanced Add-in Tool Modals */}
+                            {activeModal === 'add-bar-chart' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Add Bar Chart</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Chart Title</label>
+                                            <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., Revenue Comparison"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Data Source</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option value="">Select data to visualize...</option>
+                                                <option value="industry">Industry Breakdown</option>
+                                                <option value="competitor">Competitor Market Share</option>
+                                                <option value="funding">Funding Source Mix</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Chart Type</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Vertical Bars</option><option>Horizontal Bars</option><option>Stacked Bars</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'add-line-chart' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Add Line Chart</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Chart Title</label>
+                                            <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., Growth Trajectory"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Time Period</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>1 Year</option><option>3 Years</option><option>5 Years</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Metrics to Plot</label>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {["Revenue", "Profit", "Market Share", "Customer Growth"].map(metric => (
+                                                    <label key={metric} className="flex items-center gap-2 p-2 border rounded-md hover:bg-stone-50 cursor-pointer">
+                                                        <input type="checkbox" className="h-4 w-4"/>
+                                                        <span className="text-sm">{metric}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'add-data-table' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Add Data Table</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Table Title</label>
+                                            <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="e.g., Financial Summary"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Data Source</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Financial Data</option><option>Market Data</option><option>Operational Metrics</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Columns to Include</label>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {["Metric", "Current", "Target", "Variance", "Trend"].map(col => (
+                                                    <label key={col} className="flex items-center gap-2 p-2 border rounded-md hover:bg-stone-50 cursor-pointer">
+                                                        <input type="checkbox" defaultChecked className="h-4 w-4"/>
+                                                        <span className="text-sm">{col}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* AI Analysis Tool Modals */}
+                            {activeModal === 'add-sentiment-analysis' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Sentiment Analysis</h3>
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-stone-600">Analyze sentiment in partnership communications, market feedback, and stakeholder responses.</p>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Analysis Scope</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Partner Communications</option><option>Market Feedback</option><option>Stakeholder Surveys</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Time Period</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Last 30 Days</option><option>Last 90 Days</option><option>Last 6 Months</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'add-trend-analysis' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Trend Analysis</h3>
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-stone-600">Identify and analyze market trends, partnership patterns, and strategic opportunities.</p>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Trend Category</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Market Trends</option><option>Partnership Trends</option><option>Technology Trends</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Analysis Depth</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Overview</option><option>Detailed Analysis</option><option>Predictive Modeling</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'add-risk-assessment' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Risk Assessment Module</h3>
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-stone-600">Advanced risk modeling and assessment for partnership opportunities.</p>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Risk Categories</label>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {["Financial", "Operational", "Strategic", "Compliance", "Market", "Geopolitical"].map(risk => (
+                                                    <label key={risk} className="flex items-center gap-2 p-2 border rounded-md hover:bg-stone-50 cursor-pointer">
+                                                        <input type="checkbox" defaultChecked className="h-4 w-4"/>
+                                                        <span className="text-sm">{risk} Risk</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Assessment Method</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Quantitative</option><option>Qualitative</option><option>Mixed Methods</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'add-market-prediction' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Market Prediction Engine</h3>
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-stone-600">AI-powered market forecasting and predictive analytics for strategic planning.</p>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Prediction Horizon</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>6 Months</option><option>1 Year</option><option>2 Years</option><option>5 Years</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Prediction Factors</label>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {["Economic Indicators", "Technology Trends", "Competitive Landscape", "Regulatory Changes", "Consumer Behavior", "Geopolitical Events"].map(factor => (
+                                                    <label key={factor} className="flex items-center gap-2 p-2 border rounded-md hover:bg-stone-50 cursor-pointer">
+                                                        <input type="checkbox" defaultChecked className="h-4 w-4"/>
+                                                        <span className="text-sm">{factor}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Content Enhancement Modals */}
+                            {activeModal === 'add-text-block' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Add Text Block</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Block Type</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Paragraph</option><option>Bullet Points</option><option>Callout Box</option><option>Quote</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Content</label>
+                                            <textarea className="w-full p-2 border border-stone-200 rounded text-sm h-32" placeholder="Enter your text content..."/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Styling</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Normal</option><option>Bold</option><option>Italic</option><option>Highlighted</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'add-quote' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Add Quote</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Quote Text</label>
+                                            <textarea className="w-full p-2 border border-stone-200 rounded text-sm h-24" placeholder="Enter the quote..."/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Attribution</label>
+                                            <input type="text" className="w-full p-2 border border-stone-200 rounded text-sm" placeholder="Who said this?"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Quote Style</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Large & Prominent</option><option>Sidebar Style</option><option>Inline Quote</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeModal === 'add-callout' && (
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4">Add Callout Box</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Callout Type</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Important Note</option><option>Key Insight</option><option>Warning</option><option>Success Story</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Content</label>
+                                            <textarea className="w-full p-2 border border-stone-200 rounded text-sm h-24" placeholder="Enter callout content..."/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">Background Color</label>
+                                            <select className="w-full p-2 border border-stone-200 rounded text-sm">
+                                                <option>Blue</option><option>Green</option><option>Yellow</option><option>Red</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Placeholder for other modals */}
-                            {activeModal && !['identity', 'mandate', 'market', 'risk', 'generation', 'analysis', 'marketplace', 'doc-summary', 'doc-bi', 'doc-analyzer', 'doc-diversification', 'doc-ethics', 'doc-precedent', 'letter-loi', 'letter-termsheet', 'letter-mou', 'letter-proposal', 'letter-im', 'letter-ddr', 'add-pie-chart'].includes(activeModal) && modalView === 'main' && (
+                            {activeModal && !['identity', 'mandate', 'market', 'risk', 'generation', 'analysis', 'marketplace', 'doc-summary', 'doc-bi', 'doc-analyzer', 'doc-diversification', 'doc-ethics', 'doc-precedent', 'doc-suite', 'doc-financial-model', 'doc-risk-assessment', 'letter-loi', 'letter-termsheet', 'letter-mou', 'letter-proposal', 'letter-im', 'letter-ddr', 'letter-jv', 'letter-nda', 'letter-licensing', 'add-pie-chart', 'add-bar-chart', 'add-line-chart', 'add-data-table', 'add-sentiment-analysis', 'add-trend-analysis', 'add-risk-assessment', 'add-market-prediction', 'add-text-block', 'add-quote', 'add-callout'].includes(activeModal) && modalView === 'main' && (
                                 <div className="text-center text-stone-400 p-16">
                                     <h3 className="text-lg font-bold text-stone-700 mb-2">Configure {activeModal.replace(/-/g, ' ')}</h3>
                                     <p>Configuration options for this tool would appear here.</p>
