@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ReportParameters, SkillLevel } from '../types';
-import { ORGANIZATION_TYPES, ORGANIZATION_SUBTYPES, REGIONS_AND_COUNTRIES, INDUSTRIES, STRATEGIC_OBJECTIVES, STRATEGIC_LENSES, INDUSTRY_NICHES, INTELLIGENCE_CATEGORIES } from '../constants';
+import { ORGANIZATION_TYPES, ORGANIZATION_SUBTYPES, REGIONS_AND_COUNTRIES, INDUSTRIES, STRATEGIC_OBJECTIVES, STRATEGIC_LENSES, INDUSTRY_NICHES, INTELLIGENCE_CATEGORIES, GLOBAL_DEPARTMENTS, GLOBAL_ROLES } from '../constants';
 import { Zap, BrainCircuit, CheckCircle, Globe, X, Network, ShieldCheck, Users, FileText, MapPin, Target, TrendingUp, AlertTriangle } from 'lucide-react';
 import { ManualInputModal } from './ManualInputModal';
 import { MissionCalibrationStep } from './MissionCalibrationStep';
@@ -10,6 +10,21 @@ interface GatewayProps {
     params: ReportParameters;
     onUpdate: (params: ReportParameters) => void;
     onComplete: () => void;
+}
+
+interface IntelligentSuggestions {
+    intelligenceCategory: string;
+    strategicOptions: {
+        title: string;
+        description: string;
+        confidence: number;
+        timeline: string;
+        risk: string;
+    }[];
+    potentialPartners: { name: string; type: string; relevance: number; contact: string }[];
+    alternativeApproaches: string[];
+    riskConsiderations: string[];
+    recommendedNextSteps: string[];
 }
 
 // --- DYNAMIC BENCHMARK DATABASE ---
@@ -36,14 +51,34 @@ const DYNAMIC_BENCHMARKS: Record<string, string[]> = {
 
 // Strategic Intent Tags
 const INTENT_TAGS = [
-    "New Market Entry",
-    "Relocation / HQ Shift",
-    "Expansion (Organic)",
-    "Mergers & Acquisitions",
-    "Joint Venture / Partnership",
-    "Supply Chain Resilience",
-    "R&D Collaboration",
-    "Investment Attraction"
+    // Market & Growth
+    'New Market Entry',
+    'Organic Expansion',
+    'Geographic Diversification',
+    'Market Consolidation',
+    'Market Share Growth',
+    'Brand Repositioning',
+    // M&A and Partnerships
+    'Mergers & Acquisitions',
+    'Joint Venture / Partnership',
+    'Strategic Alliance',
+    'Divestiture / Spin-off',
+    // Operations & Supply Chain
+    'Supply Chain Resilience',
+    'Operational Efficiency Improvement',
+    'Digital Transformation',
+    // R&D and Technology
+    'R&D Collaboration',
+    'Technology Transfer',
+    'IP Licensing',
+    // Finance & Investment
+    'Capital Raising',
+    'Investment Attraction',
+    'Financial Restructuring',
+    // People & Governance
+    'Talent Acquisition',
+    'Regulatory Engagement',
+    'Crisis Management'
 ];
 
 // Helper for Searchable Multi-Select
@@ -72,11 +107,11 @@ const MegaMultiSelect = ({
                 setIsOpen(false);
             }
         }
-        document.addEventListener("mousedown", handleClickOutside);
+        if (isOpen) document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
+    }, [isOpen]);
 
     return (
         <div className="relative" ref={wrapperRef}>
@@ -117,6 +152,16 @@ const MegaMultiSelect = ({
                                 </button>
                             ))}
                             {filtered.length === 0 && <div className="p-3 text-sm text-stone-500">No matches found.</div>}
+                            {filtered.length === 0 && search.trim().length > 2 && (
+                                <div className="p-2 border-t border-stone-100">
+                                    <button 
+                                        onClick={() => { onToggle(search.trim()); setSearch(''); }}
+                                        className="w-full text-left px-4 py-2 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md"
+                                    >
+                                        + Add "{search}" as a new entry
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         <div className="p-2 border-t border-stone-200 bg-stone-50 sticky bottom-0 z-10">
                             <button 
@@ -135,6 +180,7 @@ const MegaMultiSelect = ({
 
 export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }) => {
     const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+    const containerRef = useRef<HTMLDivElement>(null);
     
     // Manual Entry Modal State
     const [manualModal, setManualModal] = useState<{ isOpen: boolean; title: string; label: string; field: keyof ReportParameters | 'industry' }>({
@@ -146,13 +192,12 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
 
     // Intelligent Matching State
     const [showIntelligentMatching, setShowIntelligentMatching] = useState(false);
-    const [intelligentSuggestions, setIntelligentSuggestions] = useState<any>(null);
-    const [selectedIntelligenceCategory, setSelectedIntelligenceCategory] = useState<string>('');
+    const [showCustomIntent, setShowCustomIntent] = useState(false);
+    const [customIntentValue, setCustomIntentValue] = useState("");
 
     useEffect(() => {
-        const container = document.getElementById('gateway-container');
-        if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [step]);
+        containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [step, containerRef]);
 
     const update = (field: keyof ReportParameters, value: any) => {
         onUpdate({ ...params, [field]: value });
@@ -160,7 +205,9 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
 
     const handleManualEntry = (field: keyof ReportParameters | 'industry', value: string) => {
         if (field === 'industry') {
-            update('industry', [value]);
+            // Ensure industry is always an array
+            const currentIndustries = Array.isArray(params.industry) ? params.industry : [];
+            update('industry', [...currentIndustries, value]);
         } else {
             update(field as keyof ReportParameters, value);
         }
@@ -187,23 +234,22 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
         update(field, updated);
     };
 
-    // Intelligent Matching Logic (memoized)
-    const generateIntelligentSuggestions = useMemo(() => {
-        if (!params.organizationType || !params.userCountry || !params.region) return null;
+    const getIntelligentSuggestions = (currentParams: ReportParameters): IntelligentSuggestions | null => {
+        if (!currentParams.organizationType || !currentParams.userCountry || !currentParams.region) return null;
 
-        const suggestions = {
+        const suggestions: IntelligentSuggestions = {
             intelligenceCategory: '',
-            strategicOptions: [] as any[],
-            potentialPartners: [] as any[],
+            strategicOptions: [],
+            potentialPartners: [],
             alternativeApproaches: [] as any[],
             riskConsiderations: [] as string[],
             recommendedNextSteps: [] as string[]
         };
 
         // Determine Intelligence Category
-        if (params.organizationType.includes('Government') && params.region) {
+        if (currentParams.organizationType.includes('Government') && currentParams.region) {
             suggestions.intelligenceCategory = 'Government Relations';
-        } else if (params.organizationType.includes('Private') && params.industry.length > 0) {
+        } else if (currentParams.organizationType.includes('Private') && currentParams.industry.length > 0) {
             suggestions.intelligenceCategory = 'Market Entry Strategy';
         } else {
             suggestions.intelligenceCategory = 'Strategic Partnership Development';
@@ -242,7 +288,7 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
             'Americas': ['US Commercial Service', 'Canada Trade Commissioner Service', 'Brazilian Development Bank']
         };
 
-        const partners = regionPartners[params.region as keyof typeof regionPartners] || ['Regional Development Agency', 'Trade Promotion Organization'];
+        const partners = regionPartners[currentParams.region as keyof typeof regionPartners] || ['Regional Development Agency', 'Trade Promotion Organization'];
         suggestions.potentialPartners = partners.map((name, index) => ({
             name,
             type: 'Government Agency',
@@ -278,19 +324,41 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
         ];
 
         return suggestions;
+    }
+
+    // Intelligent Matching Logic (memoized)
+    const intelligentSuggestions = useMemo(() => {
+        return getIntelligentSuggestions(params);
     }, [params.organizationType, params.userCountry, params.region, params.industry]);
 
     useEffect(() => {
-        if (params.organizationType && params.userCountry && params.region && !showIntelligentMatching) {
-            setShowIntelligentMatching(true);
-            setIntelligentSuggestions(generateIntelligentSuggestions);
+        if (params.organizationType && params.userCountry && params.region && intelligentSuggestions && !showIntelligentMatching) {
+            // This logic is now handled outside of the Gateway component, in the final report.
         }
-    }, [params.organizationType, params.userCountry, params.region, generateIntelligentSuggestions]);
+    }, [params.organizationType, params.userCountry, params.region, intelligentSuggestions, showIntelligentMatching]);
 
     const inputStyles = "w-full p-3 bg-white border border-stone-300 rounded-lg focus:ring-2 focus:ring-stone-800 focus:border-stone-800 outline-none transition-all text-sm text-stone-900 shadow-sm placeholder-stone-400";
     const labelStyles = "block text-sm font-bold text-stone-800 mb-1 tracking-wide";
 
-    const subTypes = ORGANIZATION_SUBTYPES[params.organizationType] || [];
+    const detailedSubTypes: Record<string, string[]> = {
+        'Private': [
+            'Sole Proprietorship', 'Partnership', 'Limited Liability Company (LLC)', 
+            'S-Corporation', 'C-Corporation', 'B-Corporation', 'Venture-Backed Startup', 
+            'Family Office', 'Private Equity Firm', 'Venture Capital Firm'
+        ],
+        'Government': [
+            'Federal / National Agency', 'State / Provincial Department', 'Municipal / Local Government',
+            'Inter-Governmental Organization (IGO)', 'Government-Owned Corporation', 'Special Economic Zone Authority'
+        ],
+        'Non-Profit': [
+            '501(c)(3) - Public Charity', '501(c)(4) - Social Welfare', '501(c)(6) - Business League',
+            'Non-Governmental Organization (NGO)', 'Private Foundation', 'Community Trust'
+        ],
+        'Academic': ['University', 'Research Institute', 'Think Tank', 'Vocational College'],
+        ...ORGANIZATION_SUBTYPES,
+    };
+
+    const subTypes = detailedSubTypes[params.organizationType] || [];
     const showCustomTypeInput = params.organizationType === 'Custom';
     const showCustomCategoryInput = params.organizationType && (params.organizationSubType === 'Custom' || subTypes.length === 0);
 
@@ -306,10 +374,10 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
 
     useEffect(() => {
         if (!params.strategicMode) update('strategicMode', 'discovery');
-    }, []);
+    }, [params.strategicMode, update]);
 
     return (
-        <div id="gateway-container" className="h-full w-full flex flex-col items-center justify-start bg-stone-50 p-6 md:p-10 lg:p-16 pb-32 overflow-y-auto overflow-x-hidden">
+        <div ref={containerRef} className="h-full w-full flex flex-col items-center justify-start bg-stone-50 p-6 md:p-10 lg:p-16 pb-32 overflow-y-auto overflow-x-hidden">
             <div className="max-w-4xl md:max-w-5xl lg:max-w-6xl w-full bg-white rounded-3xl shadow-2xl border border-stone-200 overflow-hidden mb-16 shrink-0">
                 
                 <div className="bg-stone-900 text-white p-6 px-8 flex justify-between items-center">
@@ -356,7 +424,7 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
                                         <label className={labelStyles}>Organization Type</label>
                                         <select value={params.organizationType} onChange={handleOrgTypeChange} className={inputStyles}>
                                             <option value="">Select Type...</option>
-                                            {ORGANIZATION_TYPES.filter(t => t !== 'Other' && t !== 'Custom').map(t => <option key={t} value={t}>{t}</option>)}
+                                            {ORGANIZATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                                             <option value="Custom">Other / Custom</option>
                                         </select>
                                         {showCustomTypeInput && <input type="text" value={params.customOrganizationType || ''} onChange={(e) => update('customOrganizationType', e.target.value)} className={`${inputStyles} mt-2 bg-yellow-50`} placeholder="Specify Organization Type..." />}
@@ -373,24 +441,33 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
                                     <div>
                                         <label className={labelStyles}>Years in Operation</label>
                                         <select value={params.yearsOperation || ''} onChange={(e) => update('yearsOperation', e.target.value)} className={inputStyles}>
-                                            <option value="">Select experience...</option>
-                                            <option value="0-2">Startup (0-2 years)</option>
-                                            <option value="3-5">Early Stage (3-5 years)</option>
-                                            <option value="6-10">Growing (6-10 years)</option>
+                                            <option value="">Select age...</option>
+                                            <option value="<1">Pre-Seed / Idea Stage (&lt;1 year)</option>
+                                            <option value="1-2">Startup (1-2 years)</option>
+                                            <option value="3-5">Early Growth (3-5 years)</option>
+                                            <option value="6-10">Scaling (6-10 years)</option>
                                             <option value="11-20">Established (11-20 years)</option>
                                             <option value="20+">Legacy (20+ years)</option>
+                                            <option value="Other">Other (Specify)</option>
                                         </select>
+                                        {params.yearsOperation === 'Other' && <input type="text" onChange={(e) => update('customYearsOperation', e.target.value)} className={`${inputStyles} mt-2 bg-yellow-50`} placeholder="Specify years..." />}
                                     </div>
                                     <div>
                                         <label className={labelStyles}>Decision Authority Level</label>
                                         <select value={params.decisionAuthority || ''} onChange={(e) => update('decisionAuthority', e.target.value)} className={inputStyles}>
                                             <option value="">Select authority...</option>
-                                            <option value="Executive">C-Suite Executive</option>
+                                            <option value="Founder/Owner">Founder / Owner</option>
+                                            <option value="Executive">C-Suite / Executive</option>
                                             <option value="Board">Board Member</option>
-                                            <option value="Manager">Department Manager</option>
-                                            <option value="Analyst">Business Analyst</option>
-                                            <option value="Consultant">External Consultant</option>
+                                            <option value="VP/Director">VP / Director</option>
+                                            <option value="Manager">Department Manager / Head</option>
+                                            <option value="Project Lead">Project / Program Lead</option>
+                                            <option value="Analyst">Analyst / Specialist</option>
+                                            <option value="Contributor">Individual Contributor</option>
+                                            <option value="Consultant">External Advisor / Consultant</option>
+                                            <option value="Other">Other (Specify)</option>
                                         </select>
+                                        {params.decisionAuthority === 'Other' && <input type="text" onChange={(e) => update('customDecisionAuthority', e.target.value)} className={`${inputStyles} mt-2 bg-yellow-50`} placeholder="Specify authority level..." />}
                                     </div>
                                 </div>
                                 <div className="space-y-6">
@@ -439,12 +516,17 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
                                     <label className={labelStyles}>Organization Size</label>
                                     <select value={params.organizationSize || ''} onChange={(e) => update('organizationSize', e.target.value)} className={inputStyles}>
                                         <option value="">Select Size...</option>
-                                        <option value="Startup">Startup (1-50 employees)</option>
-                                        <option value="SMB">SMB (51-500 employees)</option>
-                                        <option value="Mid-Market">Mid-Market (501-5000 employees)</option>
-                                        <option value="Enterprise">Enterprise (5000+ employees)</option>
+                                        <option value="1-10">Micro (1-10 employees)</option>
+                                        <option value="11-50">Startup (11-50 employees)</option>
+                                        <option value="51-250">SMB (51-250 employees)</option>
+                                        <option value="251-1000">Mid-Market (251-1,000 employees)</option>
+                                        <option value="1001-5000">Large (1,001-5,000 employees)</option>
+                                        <option value="5000+">Enterprise (5,000+ employees)</option>
                                         <option value="Government">Government Agency</option>
+                                        <option value="Solo">Solo / Individual</option>
+                                        <option value="Other">Other (Specify)</option>
                                     </select>
+                                    {params.organizationSize === 'Other' && <input type="text" onChange={(e) => update('customOrganizationSize', e.target.value)} className={`${inputStyles} mt-2 bg-yellow-50`} placeholder="Specify organization size..." />}
                                 </div>
                             </div>
 
@@ -464,51 +546,43 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
                                 <input type="url" value={params.organizationWebsite || ''} onChange={e => update('organizationWebsite', e.target.value)} className={inputStyles} placeholder="https://www.organization.com" />
                             </div>
 
-                            {/* INTELLIGENT MATCHING SECTION */}
-                            {showIntelligentMatching && intelligentSuggestions && (
-                                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-6 mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-lg">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <BrainCircuit className="w-8 h-8 text-blue-600" />
-                                        <div>
-                                            <h3 className="text-xl font-bold text-blue-900">Nexus Intelligence Analysis</h3>
-                                            <p className="text-blue-700 text-sm">AI-powered strategic insights based on your profile</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Intelligence Category */}
-                                    <div className="bg-white p-4 rounded-lg border border-blue-100">
-                                        <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
-                                            <Target className="w-4 h-4" /> Detected Intelligence Category
-                                        </h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                                                {intelligentSuggestions.intelligenceCategory}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Intelligence Category Selection */}
-                                    <div className="bg-white p-4 rounded-lg border border-indigo-100">
-                                        <h4 className="font-bold text-indigo-900 mb-3">Refine Intelligence Focus</h4>
-                                        <p className="text-sm text-indigo-700 mb-3">Select a more specific intelligence category or keep the AI recommendation:</p>
-                                        <select
-                                            value={selectedIntelligenceCategory || intelligentSuggestions.intelligenceCategory}
-                                            onChange={(e) => {
-                                                setSelectedIntelligenceCategory(e.target.value);
-                                                update('intelligenceCategory', e.target.value);
-                                            }}
-                                            className="w-full p-2 border border-indigo-200 rounded text-sm"
-                                        >
-                                            <option value={intelligentSuggestions.intelligenceCategory}>
-                                                ✓ AI Recommended: {intelligentSuggestions.intelligenceCategory}
-                                            </option>
-                                            {INTELLIGENCE_CATEGORIES.filter(cat => cat !== intelligentSuggestions.intelligenceCategory).map(category => (
-                                                <option key={category} value={category}>{category}</option>
-                                            ))}
-                                        </select>
-                                    </div>
+                            <div className="grid md:grid-cols-2 gap-10">
+                                <div>
+                                    <label className={labelStyles}>LinkedIn Profile</label>
+                                    <input type="url" value={params.linkedinProfile || ''} onChange={e => update('linkedinProfile', e.target.value)} className={inputStyles} placeholder="https://linkedin.com/company/..." />
                                 </div>
-                            )}
+                                <div>
+                                    <label className={labelStyles}>Twitter Handle</label>
+                                    <input type="text" value={params.twitterHandle || ''} onChange={e => update('twitterHandle', e.target.value)} className={inputStyles} placeholder="@organization" />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className={labelStyles}>Organization Description</label>
+                                <textarea value={params.organizationDescription || ''} onChange={e => update('organizationDescription', e.target.value)} className={`${inputStyles} h-24 resize-none`} placeholder="Brief description of your organization, mission, and key activities..." />
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-10">
+                                <div>
+                                    <label className={labelStyles}>Secondary Contact Email</label>
+                                    <input type="email" value={params.secondaryContactEmail || ''} onChange={e => update('secondaryContactEmail', e.target.value)} className={inputStyles} placeholder="secondary@organization.com" />
+                                </div>
+                                <div>
+                                    <label className={labelStyles}>Secondary Contact Phone</label>
+                                    <input type="tel" value={params.secondaryContactPhone || ''} onChange={e => update('secondaryContactPhone', e.target.value)} className={inputStyles} placeholder="+1 (555) 987-6543" />
+                                </div>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-10">
+                                <div>
+                                    <label className={labelStyles}>Exact Employee Count</label>
+                                    <input type="number" value={params.exactEmployeeCount || ''} onChange={e => update('exactEmployeeCount', e.target.value)} className={inputStyles} placeholder="e.g. 1250" />
+                                </div>
+                                <div>
+                                    <label className={labelStyles}>Annual Revenue (USD)</label>
+                                    <input type="text" value={params.annualRevenue || ''} onChange={e => update('annualRevenue', e.target.value)} className={inputStyles} placeholder="e.g. $50M" />
+                                </div>
+                            </div>
 
                             <div className="pt-6 border-t border-stone-100 flex justify-end">
                                 <button onClick={() => setStep(2)} disabled={!params.organizationType || !params.userCountry} className="px-8 py-3 bg-stone-900 text-white font-bold rounded-lg hover:bg-stone-800 disabled:opacity-50 transition-all shadow-md">Next: Strategy & Deal Architecture &rarr;</button>
@@ -631,6 +705,21 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
                                                         <option value="Global">Global Search</option>
                                                     </select>
                                                 </div>
+                                                <div>
+                                                    <label className={labelStyles}>Deal Size / Scope</label>
+                                                    <select value={params.dealSize || ''} onChange={e => update('dealSize', e.target.value)} className={inputStyles}>
+                                                        <option value="">Select scale...</option>
+                                                        <option value="<100k">Pilot (&lt; $100k)</option>
+                                                        <option value="100k-1M">Micro ($100k - $1M)</option>
+                                                        <option value="1M-10M">Small ($1M - $10M)</option>
+                                                        <option value="10M-50M">Medium ($10M - $50M)</option>
+                                                        <option value="50M-250M">Large ($50M - $250M)</option>
+                                                        <option value="250M-1B">Major ($250M - $1B)</option>
+                                                        <option value=">1B">Mega (&gt; $1B)</option>
+                                                        <option value="Other">Other (Specify)</option>
+                                                    </select>
+                                                    {params.dealSize === 'Other' && <input type="text" onChange={(e) => update('customDealSize', e.target.value)} className={`${inputStyles} mt-2 bg-yellow-50`} placeholder="Specify deal size..." />}
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -653,19 +742,111 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
                                                     {tag}
                                                 </button>
                                             ))}
+                                            <button 
+                                                onClick={() => setShowCustomIntent(!showCustomIntent)}
+                                                className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${showCustomIntent ? 'bg-gray-700 text-white border-gray-700' : 'bg-gray-100 text-gray-600 border-gray-200 hover:border-gray-400'}`}
+                                            >
+                                                Other...
+                                            </button>
+                                        </div>
+
+                                        {showCustomIntent && (
+                                            <div className="flex gap-2 p-3 bg-gray-100 rounded-lg animate-in fade-in duration-300">
+                                                <input 
+                                                    type="text" 
+                                                    value={customIntentValue}
+                                                    onChange={e => setCustomIntentValue(e.target.value)}
+                                                    className="flex-grow p-2 border border-stone-300 rounded-md text-sm"
+                                                    placeholder="Specify custom intent..."
+                                                />
+                                                <button onClick={() => { if(customIntentValue.trim()) { toggleArrayItem('intentTags', customIntentValue.trim()); setCustomIntentValue(''); setShowCustomIntent(false); } }} className="px-4 py-2 bg-stone-800 text-white text-sm font-bold rounded-md hover:bg-stone-900">Add</button>
+                                            </div>
                                         </div>
                                         
                                         <div>
                                             <label className={labelStyles}>Mission Context (Tell the System)</label>
-                                            <textarea 
-                                                value={params.additionalContext || ''} 
-                                                onChange={e => update('additionalContext', e.target.value)} 
-                                                className="w-full p-3 bg-white border border-stone-200 rounded-lg text-sm min-h-[100px] resize-none focus:ring-2 focus:ring-stone-800" 
+                                            <textarea
+                                                value={params.additionalContext || ''}
+                                                onChange={e => update('additionalContext', e.target.value)}
+                                                className="w-full p-3 bg-white border border-stone-200 rounded-lg text-sm min-h-[100px] resize-none focus:ring-2 focus:ring-stone-800"
                                                 placeholder="Describe specific goals, constraints, or unique requirements... (e.g. 'We need a partner with strong ESG credentials for a joint venture in renewable energy.')"
                                             />
                                         </div>
                                     </div>
-                                </div>
+
+                                    {/* ADDITIONAL STRATEGIC PARAMETERS */}
+                                    <div className="mt-6 pt-6 border-t border-stone-200">
+                                        <h3 className="text-sm font-bold text-stone-900 mb-4 flex items-center gap-2"><Shield className="w-4 h-4 text-red-600" /> Strategic Risk & Priority Framework</h3>
+
+                                        <div className="grid md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label className={labelStyles}>Priority Themes</label>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {[
+                                                        'Digital Transformation', 'Sustainability (ESG)', 'Innovation', 'Cost Leadership',
+                                                        'Customer Experience', 'Operational Excellence', 'Talent Development', 'Regulatory Compliance'
+                                                    ].map(theme => (
+                                                        <button
+                                                            key={theme}
+                                                            onClick={() => toggleArrayItem('priorityThemes', theme)}
+                                                            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                                                                (params.priorityThemes || []).includes(theme)
+                                                                ? 'bg-red-600 text-white border-red-600'
+                                                                : 'bg-white text-stone-600 border-stone-200 hover:border-red-300'
+                                                            }`}
+                                                        >
+                                                            {theme}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className={labelStyles}>Political Sensitivities</label>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {[
+                                                        'Data Sovereignty', 'National Security', 'Labor Rights', 'Environmental Impact',
+                                                        'Cultural Heritage', 'Political Stability', 'Sanctions Exposure'
+                                                    ].map(sensitivity => (
+                                                        <button
+                                                            key={sensitivity}
+                                                            onClick={() => toggleArrayItem('politicalSensitivities', sensitivity)}
+                                                            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                                                                (params.politicalSensitivities || []).includes(sensitivity)
+                                                                ? 'bg-orange-600 text-white border-orange-600'
+                                                                : 'bg-white text-stone-600 border-stone-200 hover:border-orange-300'
+                                                            }`}
+                                                        >
+                                                            {sensitivity}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-6">
+                                            <label className={labelStyles}>Partnership Support Needs</label>
+                                            <div className="flex flex-wrap gap-2">
+                                                {[
+                                                    'Legal & Regulatory Support', 'Financial Advisory', 'Technical Expertise',
+                                                    'Market Intelligence', 'Cultural Integration', 'Operational Support',
+                                                    'Government Relations', 'Risk Management'
+                                                ].map(need => (
+                                                    <button
+                                                        key={need}
+                                                        onClick={() => toggleArrayItem('partnershipSupportNeeds', need)}
+                                                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                                                            (params.partnershipSupportNeeds || []).includes(need)
+                                                            ? 'bg-blue-600 text-white border-blue-600'
+                                                            : 'bg-white text-stone-600 border-stone-200 hover:border-blue-300'
+                                                        }`}
+                                                    >
+                                                        {need}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
                             </div>
 
                             <div className="pt-6 border-t border-stone-100 flex justify-between">
@@ -709,7 +890,16 @@ export const Gateway: React.FC<GatewayProps> = ({ params, onUpdate, onComplete }
                                 <label className="block text-lg font-bold text-indigo-900 mb-2 flex items-center gap-2"><BrainCircuit className="w-6 h-6 text-indigo-600" /> Analytical Lenses</label>
                                 <p className="text-sm text-indigo-700 mb-4">Select multiple methodologies for the Nexus Brain.</p>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {STRATEGIC_LENSES.map((lens) => (
+                                    {[
+                                        ...STRATEGIC_LENSES,
+                                        { id: 'blue_ocean', label: 'Blue Ocean Strategy', desc: 'Create uncontested market space and make the competition irrelevant.' },
+                                        { id: 'value_chain', label: 'Value Chain Analysis', desc: 'Analyze activities to understand costs and find a competitive advantage.' },
+                                        { id: 'vrio', label: 'VRIO Framework', desc: 'Assess resources for Value, Rarity, Imitability, and Organization.' },
+                                        { id: 'scenario_planning', label: 'Scenario Planning', desc: 'Develop flexible long-term plans based on multiple future scenarios.' },
+                                        { id: 'real_options', label: 'Real Options Analysis', desc: 'Value flexibility and strategic choices in investment decisions.' },
+                                        { id: 'game_theory', label: 'Game Theory', desc: 'Model competitive interactions and predict outcomes.' }
+                                    ].sort((a, b) => a.label.localeCompare(b.label))
+                                    .map((lens) => (
                                         <button
                                             key={lens.id}
                                             onClick={() => toggleArrayItem('strategicLens', lens.id)}

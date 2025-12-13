@@ -115,9 +115,19 @@ export interface ReportParameters {
   organizationSize?: string;
   contactEmail?: string;
   contactPhone?: string;
-  
+  linkedinProfile?: string;
+  twitterHandle?: string;
+  organizationDescription?: string;
+  secondaryContactEmail?: string;
+  secondaryContactPhone?: string;
+  exactEmployeeCount?: string;
+  annualRevenue?: string;
+
   customOrganizationType?: string;
   customOrganizationSubType?: string;
+  customYearsOperation?: string;
+  customDecisionAuthority?: string;
+  customOrganizationSize?: string;
   region: string;
   country: string;
   industry: string[];
@@ -148,9 +158,11 @@ export interface ReportParameters {
   riskTolerance: string;
   expansionTimeline: string;
   partnershipSupportNeeds: string[];
-  fundingSource?: string; 
-  procurementMode?: string; 
+  fundingSource?: string;
+  procurementMode?: string;
   politicalSensitivities?: string[];
+  dealSize?: string;
+  customDealSize?: string;
 
   // Metadata
   id: string;
@@ -393,6 +405,89 @@ export interface ReportData {
   implementation: ReportSection;
   financials: ReportSection;
   risks: ReportSection;
+}
+
+// --- REPORT PAYLOAD SCHEMA ---
+export interface ReportPayload {
+  metadata: {
+    requesterType: string;
+    country: string;
+    region: string;
+    timestamp: string;
+    reportId: string;
+  };
+  problemDefinition: {
+    statedProblem: string;
+    constraints: string[];
+    urgency: string;
+  };
+  regionalProfile: {
+    demographics: {
+      population: number;
+      gdpPerCapita: number;
+      laborCosts: number;
+    };
+    infrastructure: {
+      transportation: number;
+      digital: number;
+      utilities: number;
+    };
+    logistics: {
+      regionalConnectivity: number;
+      exportPotential: number;
+    };
+  };
+  economicSignals: {
+    tradeExposure: number;
+    tariffSensitivity: number;
+    costAdvantages: string[];
+    bottleneckReliefPotential: number;
+  };
+  opportunityMatches: {
+    sectors: string[];
+    partnerTypes: string[];
+    riskAdjustedROI: number;
+  };
+  risks: {
+    political: {
+      stabilityScore: number;
+      regionalConflictRisk: number;
+    };
+    regulatory: {
+      corruptionIndex: number;
+      regulatoryFriction: number;
+      complianceRoadmap: string[];
+    };
+    operational: {
+      supplyChainDependency: number;
+      currencyRisk: string;
+    };
+  };
+  recommendations: {
+    shortTerm: string[];
+    midTerm: string[];
+    longTerm: string[];
+  };
+  confidenceScores: {
+    overall: number;
+    economicReadiness: number;
+    symbioticFit: number;
+    politicalStability: number;
+    partnerReliability: number;
+    ethicalAlignment: number;
+    activationVelocity: number;
+    transparency: number;
+  };
+  computedIntelligence: {
+    spi: SPIResult;
+    rroi: RROI_Index;
+    seam: SEAM_Blueprint;
+    symbioticPartners: SymbioticPartner[];
+    diversificationAnalysis: DiversificationAnalysis;
+    ethicsCheck: EthicalCheckResult;
+    ivas: any; // From orchestration
+    scf: any; // Strategic Cash Flow
+  };
 }
 
 export interface CopilotInsight {

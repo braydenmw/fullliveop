@@ -41,6 +41,8 @@ import useEscapeKey from './hooks/useEscapeKey';
 import { generateCopilotInsights, generateReportSectionStream, askCopilot } from './services/geminiService';
 import { generateBenchmarkData } from './services/mockDataGenerator';
 import { calculateSPI } from './services/engine';
+import { ReportOrchestrator } from './services/ReportOrchestrator';
+import { ReportPayload } from './types';
 import { LayoutGrid, Globe, ShieldCheck, Layers, LayoutDashboard, Plus } from 'lucide-react';
 import DemoIndicator from './components/DemoIndicator';
 
@@ -200,14 +202,22 @@ const App: React.FC = () => {
         setIsGeneratingReport(true);
         setGenPhase('intake');
         setGenProgress(5);
-        
-        // Calculate Scores using Math Engine
-        const spiResult = calculateSPI(params);
-        
-        // Calculate mock IVAS/SCF proxies for the dashboard visuals
-        // (In full production these would be distinct calls, here we derive for the dashboard)
-        const marketPotential = Math.round(spiResult.breakdown.find(b => b.label === 'Economic Readiness')?.value || 50);
-        const riskFactors = Math.round(100 - (spiResult.breakdown.find(b => b.label === 'Political Stability')?.value || 50));
+
+        // Assemble complete ReportPayload using ReportOrchestrator
+        console.log('DEBUG: Starting report generation with ReportOrchestrator');
+        const reportPayload = await ReportOrchestrator.assembleReportPayload(params);
+        ReportOrchestrator.logPayload(reportPayload); // Debug logging
+
+        // Validate payload completeness
+        const validation = ReportOrchestrator.validatePayload(reportPayload);
+        if (!validation.isComplete) {
+            console.warn('DEBUG: Incomplete payload, missing fields:', validation.missingFields);
+        }
+
+        // Extract scores for backward compatibility
+        const spiResult = reportPayload.computedIntelligence.spi;
+        const marketPotential = reportPayload.confidenceScores.economicReadiness;
+        const riskFactors = 100 - reportPayload.confidenceScores.politicalStability;
 
         const updatedScore = {
             totalScore: spiResult.spi,
@@ -215,12 +225,12 @@ const App: React.FC = () => {
             riskFactors: riskFactors
         };
 
-        const updatedParams = { 
-            ...params, 
+        const updatedParams = {
+            ...params,
             opportunityScore: updatedScore,
-            status: 'generating' as const 
+            status: 'generating' as const
         };
-        
+
         setParams(updatedParams);
 
         // Save to repository immediately
@@ -238,13 +248,17 @@ const App: React.FC = () => {
         await new Promise(r => setTimeout(r, 2000));
         setGenPhase('synthesis'); setGenProgress(75);
 
-        // Generate Sections
+        // Generate Sections with computed intelligence
         const sectionsToGenerate = ['executiveSummary', 'marketAnalysis', 'recommendations', 'implementation', 'financials', 'risks'];
         for (const sectionKey of sectionsToGenerate) {
             setReportData(prev => ({ ...prev, [sectionKey]: { ...prev[sectionKey as keyof ReportData], status: 'generating' } }));
-            await generateReportSectionStream(sectionKey, updatedParams, (chunk) => {
+
+            // Generate content using both AI and computed data
+            const enhancedParams = { ...updatedParams, reportPayload };
+            await generateReportSectionStream(sectionKey, enhancedParams, (chunk) => {
                 setReportData(prev => ({ ...prev, [sectionKey]: { ...prev[sectionKey as keyof ReportData], content: chunk } }));
             });
+
             setReportData(prev => ({ ...prev, [sectionKey]: { ...prev[sectionKey as keyof ReportData], status: 'completed' } }));
         }
 

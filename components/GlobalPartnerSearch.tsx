@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { INDUSTRIES, REGIONS_AND_COUNTRIES } from '../constants';
 import { Search, Users, Globe } from 'lucide-react';
 import MatchmakingEngine from './MatchmakingEngine';
@@ -9,9 +9,10 @@ const GlobalPartnerSearch: React.FC = () => {
     const [region, setRegion] = useState('');
     const [industry, setIndustry] = useState('');
     const [showResults, setShowResults] = useState(false);
+    const [searchId] = useState(() => 'search-' + Date.now());
 
     // Mock minimal params for the engine
-    const mockParams: ReportParameters = {
+    const mockParams: ReportParameters = useMemo(() => ({
         reportName: 'Quick Search',
         userName: 'Guest',
         userDepartment: '',
@@ -32,7 +33,7 @@ const GlobalPartnerSearch: React.FC = () => {
         tier: ['Tier 1'],
         aiPersona: [],
         customAiPersona: '',
-        id: 'search-' + Date.now(),
+        id: searchId,
         createdAt: new Date().toISOString(),
         status: 'draft',
         analyticalModules: [],
@@ -62,7 +63,7 @@ const GlobalPartnerSearch: React.FC = () => {
         letterStyle: 'Formal Exploratory',
         strategicObjectives: [],
         opportunityScore: { totalScore: 0, marketPotential: 0, riskFactors: 0 }
-    };
+    }), [region, industry, searchId]);
 
     const handleSearch = () => {
         if (region && industry) {

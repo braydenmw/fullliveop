@@ -49,6 +49,8 @@ const IntegrationExportFramework: React.FC = () => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
+  // Calculate dates once to avoid impure function calls during render
+  const [now] = useState(() => Date.now());
   const [integrations, setIntegrations] = useState<Integration[]>([
     {
       id: 'sfdc',
@@ -60,7 +62,7 @@ const IntegrationExportFramework: React.FC = () => {
         endpoint: 'https://api.salesforce.com/v57.0',
         authentication: 'OAuth 2.0'
       },
-      lastSync: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      lastSync: new Date(now - 2 * 60 * 60 * 1000),
       syncFrequency: 'daily'
     },
     {
@@ -85,7 +87,7 @@ const IntegrationExportFramework: React.FC = () => {
         endpoint: 'https://sap.company.com:8000',
         authentication: 'Basic Auth'
       },
-      lastSync: new Date(Date.now() - 48 * 60 * 60 * 1000),
+      lastSync: new Date(now - 48 * 60 * 60 * 1000),
       syncFrequency: 'weekly'
     }
   ]);
@@ -97,7 +99,7 @@ const IntegrationExportFramework: React.FC = () => {
       format: 'pdf',
       description: 'Full partnership analysis with key metrics and recommendations',
       fields: ['partnership_name', 'compatibility_score', 'financial_summary', 'risks', 'recommendations', 'timeline'],
-      lastUsed: new Date(Date.now() - 1 * 60 * 60 * 1000),
+      lastUsed: new Date(now - 1 * 60 * 60 * 1000),
       enabled: true
     },
     {
@@ -106,7 +108,7 @@ const IntegrationExportFramework: React.FC = () => {
       format: 'json',
       description: 'Import-ready JSON for Salesforce Account object',
       fields: ['company_name', 'industry', 'country', 'revenue', 'employees', 'custom_fields'],
-      lastUsed: new Date(Date.now() - 24 * 60 * 60 * 1000),
+      lastUsed: new Date(now - 24 * 60 * 60 * 1000),
       enabled: true
     },
     {
@@ -138,7 +140,7 @@ const IntegrationExportFramework: React.FC = () => {
   const [exportHistory, setExportHistory] = useState<ExportHistory[]>([
     {
       id: '1',
-      date: new Date(Date.now() - 1 * 60 * 60 * 1000),
+      date: new Date(now - 1 * 60 * 60 * 1000),
       format: 'PDF',
       destination: 'Email: CEO@company.com',
       recordCount: 1,
@@ -147,7 +149,7 @@ const IntegrationExportFramework: React.FC = () => {
     },
     {
       id: '2',
-      date: new Date(Date.now() - 6 * 60 * 60 * 1000),
+      date: new Date(now - 6 * 60 * 60 * 1000),
       format: 'JSON',
       destination: 'Salesforce CRM',
       recordCount: 15,
@@ -156,7 +158,7 @@ const IntegrationExportFramework: React.FC = () => {
     },
     {
       id: '3',
-      date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+      date: new Date(now - 24 * 60 * 60 * 1000),
       format: 'CSV',
       destination: 'Excel Spreadsheet',
       recordCount: 42,
@@ -165,7 +167,7 @@ const IntegrationExportFramework: React.FC = () => {
     },
     {
       id: '4',
-      date: new Date(Date.now() - 48 * 60 * 60 * 1000),
+      date: new Date(now - 48 * 60 * 60 * 1000),
       format: 'XML',
       destination: 'SAP ERP',
       recordCount: 8,
@@ -201,7 +203,7 @@ P003,Poland Services,Poland,91
 
     // Add to history
     const newExport: ExportHistory = {
-      id: Date.now().toString(),
+      id: now.toString(),
       date: new Date(),
       format: template.format.toUpperCase(),
       destination: 'Local Download',

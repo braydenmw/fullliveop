@@ -11,15 +11,11 @@ interface ManualInputModalProps {
     initialValue?: string;
 }
 
-export const ManualInputModal: React.FC<ManualInputModalProps> = ({ 
-    isOpen, onClose, onSave, title, label, initialValue = '' 
+export const ManualInputModal: React.FC<ManualInputModalProps> = ({
+    isOpen, onClose, onSave, title, label, initialValue = ''
 }) => {
     useEscapeKey(onClose);
-    const [value, setValue] = useState(initialValue);
-
-    useEffect(() => {
-        if (isOpen) setValue(initialValue);
-    }, [isOpen, initialValue]);
+    const [value, setValue] = useState(() => isOpen ? initialValue : '');
 
     if (!isOpen) return null;
 

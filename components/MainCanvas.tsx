@@ -223,6 +223,22 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
         case 'supply-chain-analysis':
           enhancedReport.risks.content += '\n\n**Supply Chain Analysis:**\n- Dependency Concentration: 3 major suppliers (45% of inputs)\n- Geographic Diversification: 60% local, 40% international\n- Risk Mitigation: Backup suppliers identified\n- Cost Optimization: 12% potential savings through consolidation\n- Sustainability Score: 76/100 for supply chain practices';
           break;
+
+        case 'charts':
+          enhancedReport.financials.content += '\n\n**Charts Integration:**\n- Visual charts included for data representation\n- Pie charts for market share visualization\n- Bar charts for financial projections\n- Line charts for growth trends';
+          break;
+
+        case 'data':
+          enhancedReport.marketAnalysis.content += '\n\n**Data Visualization:**\n- Data tables and metrics integrated\n- Key performance indicators displayed\n- Comparative data analysis included';
+          break;
+
+        case 'ai-analysis':
+          enhancedReport.marketAnalysis.content += '\n\n**AI Analysis:**\n- Advanced AI-driven insights applied\n- Predictive analytics and trend analysis included\n- Machine learning models for forecasting';
+          break;
+
+        case 'content':
+          enhancedReport.executiveSummary.content += '\n\n**Content Enhancement:**\n- Additional content blocks and text enhancements added\n- Rich media and formatted content integrated\n- Narrative improvements for clarity';
+          break;
       }
     });
 
@@ -606,6 +622,70 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                     <span className="text-xs font-bold text-stone-900">Supply Chain Analysis</span>
                                 </div>
                                 <p className="text-[10px] text-stone-600">Dependency mapping</p>
+                            </div>
+                        </label>
+
+                        <label className="flex items-start gap-2 p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all cursor-pointer group">
+                            <input
+                                type="checkbox"
+                                checked={selectedIntelligenceEnhancements.includes('charts')}
+                                onChange={() => handleIntelligenceEnhancementToggle('charts')}
+                                className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-stone-300 rounded"
+                            />
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <BarChart3 className="w-4 h-4 text-blue-600" />
+                                    <span className="text-xs font-bold text-stone-900">Charts</span>
+                                </div>
+                                <p className="text-[10px] text-stone-600">Visual data representation</p>
+                            </div>
+                        </label>
+
+                        <label className="flex items-start gap-2 p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-green-300 transition-all cursor-pointer group">
+                            <input
+                                type="checkbox"
+                                checked={selectedIntelligenceEnhancements.includes('data')}
+                                onChange={() => handleIntelligenceEnhancementToggle('data')}
+                                className="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 border-stone-300 rounded"
+                            />
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <Database className="w-4 h-4 text-green-600" />
+                                    <span className="text-xs font-bold text-stone-900">Data</span>
+                                </div>
+                                <p className="text-[10px] text-stone-600">Data tables and metrics</p>
+                            </div>
+                        </label>
+
+                        <label className="flex items-start gap-2 p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-purple-300 transition-all cursor-pointer group">
+                            <input
+                                type="checkbox"
+                                checked={selectedIntelligenceEnhancements.includes('ai-analysis')}
+                                onChange={() => handleIntelligenceEnhancementToggle('ai-analysis')}
+                                className="mt-1 h-4 w-4 text-purple-600 focus:ring-purple-500 border-stone-300 rounded"
+                            />
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <Cpu className="w-4 h-4 text-purple-600" />
+                                    <span className="text-xs font-bold text-stone-900">AI Analysis</span>
+                                </div>
+                                <p className="text-[10px] text-stone-600">AI-driven insights</p>
+                            </div>
+                        </label>
+
+                        <label className="flex items-start gap-2 p-3 bg-white border border-stone-200 rounded-lg hover:shadow-md hover:border-orange-300 transition-all cursor-pointer group">
+                            <input
+                                type="checkbox"
+                                checked={selectedIntelligenceEnhancements.includes('content')}
+                                onChange={() => handleIntelligenceEnhancementToggle('content')}
+                                className="mt-1 h-4 w-4 text-orange-600 focus:ring-orange-500 border-stone-300 rounded"
+                            />
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <FileText className="w-4 h-4 text-orange-600" />
+                                    <span className="text-xs font-bold text-stone-900">Content</span>
+                                </div>
+                                <p className="text-[10px] text-stone-600">Enhanced content blocks</p>
                             </div>
                         </label>
                     </div>
@@ -2416,84 +2496,6 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
 
             {/* Document Scroll Area */}
             <div className="flex-1 w-full overflow-y-auto custom-scrollbar p-8 flex justify-center relative">
-                {/* Floating Add-in Toolbar */}
-                <div className="absolute top-8 right-8 flex flex-col gap-2 z-20">
-                    {/* Charts Section */}
-                    <div className="bg-white/90 backdrop-blur-sm border border-stone-200 rounded-lg shadow-lg p-2">
-                        <div className="text-xs font-bold text-stone-600 mb-2 text-center">Charts</div>
-                        <div className="grid grid-cols-2 gap-1">
-                            <button onClick={() => openModal('add-pie-chart')} title="Add Pie Chart" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <PieChart size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-bar-chart')} title="Add Bar Chart" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <BarChart3 size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-line-chart')} title="Add Line Chart" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <TrendingUp size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-area-chart')} title="Add Area Chart" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <Activity size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Data Visualization Section */}
-                    <div className="bg-white/90 backdrop-blur-sm border border-stone-200 rounded-lg shadow-lg p-2">
-                        <div className="text-xs font-bold text-stone-600 mb-2 text-center">Data</div>
-                        <div className="grid grid-cols-2 gap-1">
-                            <button onClick={() => openModal('add-data-table')} title="Add Data Table" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <Database size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-network-graph')} title="Add Network Graph" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <Network size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-heatmap')} title="Add Heatmap" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <BarChart size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-scatter-plot')} title="Add Scatter Plot" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <GitBranch size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* AI Analysis Section */}
-                    <div className="bg-white/90 backdrop-blur-sm border border-stone-200 rounded-lg shadow-lg p-2">
-                        <div className="text-xs font-bold text-stone-600 mb-2 text-center">AI Analysis</div>
-                        <div className="grid grid-cols-2 gap-1">
-                            <button onClick={() => openModal('add-sentiment-analysis')} title="Sentiment Analysis" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <Cpu size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-trend-analysis')} title="Trend Analysis" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <TrendingUp size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-risk-assessment')} title="Risk Assessment" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <Shield size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-market-prediction')} title="Market Prediction" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <BarChart3 size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Content Section */}
-                    <div className="bg-white/90 backdrop-blur-sm border border-stone-200 rounded-lg shadow-lg p-2">
-                        <div className="text-xs font-bold text-stone-600 mb-2 text-center">Content</div>
-                        <div className="grid grid-cols-2 gap-1">
-                            <button onClick={() => openModal('add-text-block')} title="Add Text Block" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <FileText size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-image')} title="Add Image" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <Users size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-quote')} title="Add Quote" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <MessageCircle size={16} />
-                            </button>
-                            <button onClick={() => openModal('add-callout')} title="Add Callout" className="p-2 hover:bg-stone-100 rounded text-stone-600 transition-all">
-                                <AlertCircle size={16} />
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
                 {/* The Page Itself */}
                 <motion.div
@@ -2561,6 +2563,35 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                 <div className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">{enhancedReportData.marketAnalysis.content}</div>
                             ) : (
                                 <p className="text-sm text-stone-400 italic">Awaiting market analysis...</p>
+                            )}
+
+                            {/* Display Computed Intelligence */}
+                            {params.reportPayload && (
+                                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <h3 className="text-sm font-bold text-blue-900 mb-3">Computed Intelligence</h3>
+                                    <div className="grid grid-cols-2 gap-4 text-xs">
+                                        <div>
+                                            <span className="font-semibold">RROI Score:</span> {params.reportPayload.computedIntelligence.rroi.overallScore}/100
+                                        </div>
+                                        <div>
+                                            <span className="font-semibold">SPI Score:</span> {params.reportPayload.computedIntelligence.spi.spi}/100
+                                        </div>
+                                        <div>
+                                            <span className="font-semibold">Economic Readiness:</span> {params.reportPayload.confidenceScores.economicReadiness}/100
+                                        </div>
+                                        <div>
+                                            <span className="font-semibold">Political Stability:</span> {params.reportPayload.confidenceScores.politicalStability}/100
+                                        </div>
+                                    </div>
+                                    <div className="mt-3">
+                                        <span className="font-semibold text-xs">Top Symbiotic Partners:</span>
+                                        <ul className="text-xs mt-1">
+                                            {params.reportPayload.computedIntelligence.symbioticPartners.slice(0, 2).map((partner, idx) => (
+                                                <li key={idx} className="text-stone-700">• {partner.entityName} (Score: {partner.symbiosisScore})</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
                             )}
                         </div>
 

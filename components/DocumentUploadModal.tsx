@@ -24,32 +24,6 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   const [uploadResults, setUploadResults] = useState<UploadResult[]>([]);
   const [dragActive, setDragActive] = useState(false);
 
-  const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  }, []);
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFiles(Array.from(e.dataTransfer.files));
-    }
-  }, []);
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      handleFiles(Array.from(e.target.files));
-    }
-  };
-
   const handleFiles = async (files: File[]) => {
     setIsUploading(true);
     setUploadResults([]);
@@ -59,7 +33,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
     for (const file of files) {
       try {
         const startTime = Date.now();
-        
+
         // Simulate upload delay
         await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -111,6 +85,32 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
     setUploadResults(results);
     setIsUploading(false);
+  };
+
+  const handleDrag = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFiles(Array.from(e.dataTransfer.files));
+    }
+  }, [handleFiles]);
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      handleFiles(Array.from(e.target.files));
+    }
   };
 
   const formatFileSize = (bytes: number): string => {

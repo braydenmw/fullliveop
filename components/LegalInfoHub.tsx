@@ -15,13 +15,7 @@ const SECTIONS = [
 ];
 
 export const LegalInfoHub: React.FC<LegalInfoHubProps> = ({ onBack, initialSection }) => {
-    const [activeSection, setActiveSection] = useState('ethical-framework');
-
-    useEffect(() => {
-        if (initialSection) {
-            scrollToSection(initialSection);
-        }
-    }, [initialSection]);
+    const [activeSection, setActiveSection] = useState(initialSection || 'ethical-framework');
 
     const scrollToSection = (id: string) => {
         setActiveSection(id);
@@ -30,6 +24,15 @@ export const LegalInfoHub: React.FC<LegalInfoHubProps> = ({ onBack, initialSecti
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
+
+    useEffect(() => {
+        if (initialSection) {
+            const element = document.getElementById(initialSection);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    }, [initialSection]);
 
     return (
         <div className="flex h-screen bg-stone-50 overflow-hidden font-sans text-stone-900">

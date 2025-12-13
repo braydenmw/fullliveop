@@ -34,6 +34,9 @@ const DocumentGenerationSuite: React.FC<DocumentGenerationSuiteProps> = ({
   const [generatedContent, setGeneratedContent] = useState<string>('');
   const [exportFormat, setExportFormat] = useState<'pdf' | 'docx'>('pdf');
 
+  // Calculate decision deadline once to avoid impure function calls during render
+  const [decisionDeadline] = useState(() => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString());
+
   const documentTemplates: DocumentTemplate[] = [
     {
       id: 'loi',
@@ -313,7 +316,7 @@ IMMEDIATE ACTIONS (Next 30 Days):
 3. Negotiate term sheet
 4. Secure board approvals (both sides)
 
-DECISION DEADLINE: ${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
+DECISION DEADLINE: ${decisionDeadline}
   `;
 
   const generateFinancialModel = () => `
@@ -555,7 +558,7 @@ Go/No-Go Criteria:
 
 Recommendation: ALL CRITERIA MET - PROCEED TO PHASE 1
 
-DECISION DEADLINE: ${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
+DECISION DEADLINE: ${decisionDeadline}
 
 ═══════════════════════════════════════════════════════════
 
