@@ -241,7 +241,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
           break;
 
         case 'supply-chain-analysis':
-          appendContent('risks', `**Supply Chain Analysis:**\n- Dependency Concentration: Analysis indicates a need to diversify suppliers beyond the primary ones in ${params.regions}.\n- Risk Mitigation: Backup suppliers in adjacent regions should be identified.\n- Cost Optimization: 12% potential savings through localizing supply chains in ${params.userCity}.`);
+          appendContent('risks', `**Supply Chain Analysis:**\n- Dependency Concentration: Analysis indicates a need to diversify suppliers beyond the primary ones in ${params.region || 'target markets'}.\n- Risk Mitigation: Backup suppliers in adjacent regions should be identified.\n- Cost Optimization: 12% potential savings through localizing supply chains in ${params.userCity}.`);
           break;
 
         case 'charts':
@@ -672,8 +672,8 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                                     <label className="block text-xs font-bold text-stone-700 mb-1">Operating Regions</label>
                                                     <input
                                                         type="text"
-                                                        value={params.regions}
-                                                        onChange={(e) => setParams({ ...params, regions: e.target.value })}
+                                                        value={params.region || ''}
+                                                        onChange={(e) => setParams({ ...params, region: e.target.value })}
                                                         className="w-full p-2 border border-stone-200 rounded text-sm focus:ring-1 focus:ring-amber-600 focus:border-transparent"
                                                         placeholder="e.g., North America, Southeast Asia"
                                                     />
@@ -2131,27 +2131,27 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                             )}
 
                             {/* Display Computed Intelligence */}
-                            {params.reportPayload && (
+                            {reportData && reportData.computedIntelligence && (
                                 <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                                     <h3 className="text-sm font-bold text-blue-900 mb-3">Computed Intelligence</h3>
                                     <div className="grid grid-cols-2 gap-4 text-xs">
                                         <div>
-                                            <span className="font-semibold">RROI Score:</span> {params.reportPayload.computedIntelligence.rroi.overallScore}/100
+                                            <span className="font-semibold">RROI Score:</span> {reportData.computedIntelligence?.rroi?.overallScore || 'N/A'}/100
                                         </div>
                                         <div>
-                                            <span className="font-semibold">SPI Score:</span> {params.reportPayload.computedIntelligence.spi.spi}/100
+                                            <span className="font-semibold">SPI Score:</span> {reportData.computedIntelligence?.spi?.spi || 'N/A'}/100
                                         </div>
                                         <div>
-                                            <span className="font-semibold">Economic Readiness:</span> {params.reportPayload.confidenceScores.economicReadiness}/100
+                                            <span className="font-semibold">Economic Readiness:</span> {reportData.confidenceScores?.economicReadiness || 'N/A'}/100
                                         </div>
                                         <div>
-                                            <span className="font-semibold">Political Stability:</span> {params.reportPayload.confidenceScores.politicalStability}/100
+                                            <span className="font-semibold">Political Stability:</span> {reportData.confidenceScores?.politicalStability || 'N/A'}/100
                                         </div>
                                     </div>
                                     <div className="mt-3">
                                         <span className="font-semibold text-xs">Top Symbiotic Partners:</span>
                                         <ul className="text-xs mt-1">
-                                            {params.reportPayload.computedIntelligence.symbioticPartners.slice(0, 2).map((partner, idx) => (
+                                            {reportData.computedIntelligence?.symbioticPartners?.slice(0, 2).map((partner: any, idx: number) => (
                                                 <li key={idx} className="text-stone-700">• {partner.entityName} (Score: {partner.symbiosisScore})</li>
                                             ))}
                                         </ul>
