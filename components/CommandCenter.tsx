@@ -303,17 +303,6 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
 
     void _ecosystemPulse;
 
-    const workflowSteps = [
-        { num: '01', title: 'You Define the Mandate', desc: 'State your mission, target region, constraints, and risk appetite. The agent takes it from here.' },
-        { num: '02', title: 'Agent Discovers Data', desc: 'The agent proactively hunts for information from trusted sources — no manual research, no waiting.' },
-        { num: '03', title: 'Agent Cross-References', desc: 'Every claim is fact-checked. The system cannot fabricate — it verifies or dispels.' },
-        { num: '04', title: 'Agent Runs Adversarial Debate', desc: '5 personas (Skeptic, Advocate, Regulator, etc.) debate to eliminate bias and blind spots.' },
-        { num: '05', title: 'Agent Scores via 21 Formulas', desc: 'SPI™, RROI™, SEAM™ + 18 indices produce explainable, auditable scores with drivers.' },
-        { num: '06', title: 'Agent Assembles Report Pack', desc: 'Verified intelligence is structured into an executive summary, dossier, and decision points.' },
-        { num: '07', title: 'You Receive Deliverables', desc: 'Board-ready outputs: briefs, risk registers, partner notes, and implementation narratives.' },
-        { num: '+', title: 'Agent Learns & Remembers', desc: 'Every case is stored in memory. The agent applies lessons learned to future analyses automatically.' }
-    ];
-
     return (
         <div className="flex-1 w-full h-full min-h-0 overflow-y-auto bg-slate-100 font-sans text-slate-800">
             <div className="max-w-6xl mx-auto py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 space-y-16">
@@ -330,6 +319,7 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
                     </p>
                     <p className="text-sm md:text-base text-slate-600 max-w-4xl mx-auto leading-relaxed">
                         BW Nexus AI is not a passive dashboard and not a standard chatbot. It is a proactive, agentic digital worker that begins reasoning the moment you start engaging — via your BW Consultant — listening, learning context, and responding with structured, decision-grade intelligence.
+                        Built 100% for regional development connection, it helps reduce the misunderstanding of places and break away from typical markets.
                         The goal is simple: turn a mandate into clarity, fast, with explainable math and traceable reasoning.
                     </p>
                 </div>
@@ -355,126 +345,24 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
                     </div>
                 </Section>
 
-                {/* 2. Inside the Agentic Brain (moved earlier) */}
-                <Section>
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-slate-900">Inside the Agentic Brain: How It Works</h2>
-                        <p className="text-slate-600 mt-2 max-w-4xl mx-auto leading-relaxed">
-                            This is not a black box. The Nexus Strategic Intelligence Layer (NSIL) is a neuro‑symbolic architecture: it combines pattern recognition with explainable reasoning and quantified scoring.
-                            The system follows a repeatable sequence — <strong>validate → debate → score → synthesize → deliver</strong> — turning messy real‑world inputs into a structured strategic case.
-                        </p>
-                    </div>
-
-                    <div className="mt-8 bg-slate-50 border border-slate-200 rounded-xl p-6">
-                        <div className="text-slate-900 font-bold text-sm uppercase tracking-widest">What “Agentic” Means Here</div>
-                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                            Agentic AI is not “a chat response.” It is an orchestrated workflow that takes initiative: it asks for missing constraints, challenges assumptions, proposes alternatives, and continuously structures your mandate into decision‑ready outputs.
-                            In practice: the moment you begin engaging with your BW Consultant, the system starts assembling a case — listening, learning your context, and responding immediately.
-                        </div>
-                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                            Your BW Consultant is your personal consultant with 24/7 access: always available for clarification, hypothesis testing, risk framing, and “what would break this?” questions.
-                        </div>
-
-                        <div className="mt-4 bg-white border border-slate-200 rounded-lg p-4">
-                            <div className="text-slate-950 font-bold text-xs uppercase tracking-widest">The Five‑Layer Autonomous Reasoning Stack</div>
-                            <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                <li><strong>The Adversarial Input Shield</strong>: validates inputs and flags “garbage in, garbage out” risk before scoring.</li>
-                                <li><strong>The Multi‑Perspective Reasoning Engine</strong>: runs five personas to eliminate bias and uncover blind spots.</li>
-                                <li><strong>The Counterfactual Lab</strong>: tests “what if?” scenarios to stress‑test robustness and timelines.</li>
-                                <li><strong>The Scoring Engines</strong>: applies the proprietary 21‑formula suite to produce explainable quantitative scores.</li>
-                                <li><strong>The Learning Loop</strong>: retains outcomes and case structure so the system improves over time.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">Five-Layer Reasoning Stack</h4>
-                            <p className="text-xs text-slate-500 mt-1">A layered workflow that validates, debates, simulates counterfactuals, scores, and learns — to reduce bias and improve decision clarity.</p>
-                        </div>
-                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">21-Formula Scoring Suite</h4>
-                            <p className="text-xs text-slate-500 mt-1">5 primary engines + 16 derivative indices: explainable scores that translate narratives into quantified drivers, pressure points, and confidence.</p>
-                        </div>
-                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">Optimized Algorithm Layer</h4>
-                            <p className="text-xs text-slate-500 mt-1">Algorithmic orchestration makes the reasoning loop fast and consistent: memory retrieval, contradiction checks, parallel scoring, and structured synthesis.</p>
-                        </div>
-                    </div>
-
-                    <div className="text-center mt-8">
-                        <button
-                            onClick={() => setShowFormulaModal(true)}
-                            className="px-6 py-3 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto shadow-md"
-                        >
-                            <BookOpen className="w-5 h-5" />
-                            <span>Explore Full Methodology & 21 Formulas</span>
-                        </button>
-                    </div>
-                </Section>
-
-                {/* 3. The Problem */}
-                <Section>
-                    <h2 className="text-2xl font-bold text-slate-900 text-center">The Core Problem is a Lack of Clarity</h2>
-                    <p className="text-center text-slate-600 mt-2 max-w-2xl mx-auto">
-                        Regional governments and businesses face predictable barriers: fragmented data, slow consulting cycles, and a lack of investor-grade tools. Most systems are built for big cities, not for the unique challenges of regional growth.
-                    </p>
-                    <p className="text-center text-slate-600 mt-3 max-w-3xl mx-auto">
-                        There has never been a <strong>100% dedicated</strong> system designed specifically for regional development intelligence — for the people seeking investment, partnership, and sustainable development outcomes in these vital markets.
-                        That changes now.
-                    </p>
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">Fragmented Data</h4>
-                            <p className="text-xs text-slate-500 mt-1">No real-time intelligence or single source of truth.</p>
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">Slow Consulting Cycles</h4>
-                            <p className="text-xs text-slate-500 mt-1">Too expensive, non-repeatable, and outdated on arrival.</p>
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">No Investor-Grade Narrative</h4>
-                            <p className="text-xs text-slate-500 mt-1">Static documents that don't survive scrutiny or execute.</p>
-                        </div>
-                    </div>
-                </Section>
-
-                {/* 4. The Solution & Core Differentiators */}
-                <Section>
-                    <h2 className="text-2xl font-bold text-slate-900 text-center">A New Way to See, Measure, and Deliver Opportunity</h2>
-                    <p className="text-center text-slate-600 mt-2 max-w-3xl mx-auto">
-                        This is not another dashboard. It is a proactive agentic intelligence OS that models the entire ecosystem, stress-tests assumptions, and delivers auditable, investor-grade outputs.
-                    </p>
-                    <div className="mt-8 grid md:grid-cols-2 gap-x-8 gap-y-10">
-                        <FeatureCard icon={Zap} title="Proactive, Not Reactive" description="This system doesn’t wait for perfect inputs. The second you start talking to your BW Consultant, it listens, clarifies, and begins assembling a structured case — while you work." />
-                        <FeatureCard icon={ShieldAlert} title="Verification-First Outputs" description="The workflow is built to reduce hallucination risk: it flags missing constraints, contradictions, and uncertainty so you can see what must be validated before commitments." />
-                        <FeatureCard icon={Brain} title="Memory-Augmented Intelligence" description="It remembers what you’ve built across a case: assumptions, constraints, debate outcomes, and decisions — so the intelligence compounds instead of resetting each session." />
-                        <FeatureCard icon={Users} title="Adversarial Debate" description="To eliminate bias and uncover blind spots, your strategy is debated by five specialist personas — producing an unvarnished view of upside, downside, compliance, unit economics, and feasibility." />
-                    </div>
-                </Section>
-
-                {/* 4.5 The Entire Meadow Philosophy */}
-                <Section>
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-slate-900">The Entire Meadow Philosophy: A New Way to See</h2>
-                        <p className="text-slate-600 mt-2 max-w-4xl mx-auto leading-relaxed">
-                            Most tools focus on the “bee and the flower” — the immediate transaction. That is dangerously incomplete.
-                            Real-world success depends on alignment with culture, regulation, incentives, capability, and timing — not just the deal itself.
-                        </p>
-                        <p className="text-slate-600 mt-3 max-w-4xl mx-auto leading-relaxed">
-                            BW Nexus AI models the entire meadow: the ecosystem context and stakeholders around a mandate. The output is not just a pitch — it is a decision-grade narrative with quantified scores, drivers, pressure points, and actionable next steps.
-                        </p>
-                    </div>
-                </Section>
-
-                {/* 5. The Agentic Workflow */}
+                {/* 2. What This Turns Into (Live Workspace + Draft Outputs) */}
                 <div>
                     <div className="text-center">
                         <h2 className="text-2xl font-bold text-slate-900">Your Clarity Engine: From Mandate to Intelligence in Minutes</h2>
                         <p className="text-slate-600 mt-2 max-w-3xl mx-auto">
                             BW Nexus AI is a proactive digital worker that transforms strategic goals into investor-ready intelligence through a simple workflow.
-                            It does not “wait” — it reacts immediately as you engage, guiding you to the missing constraints, contradictions, and validation steps that matter.
+                            Inside the platform, you work in a <strong>live workspace</strong>: the moment you start Step 1 of 9, you and your BW Consultant begin building a living draft (like writing on a piece of paper).
+                            Every selection you make — plus any uploads you provide — becomes structured material that compiles into multi-page deliverables.
                         </p>
+                        <div className="mt-6 max-w-5xl mx-auto">
+                            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm text-left">
+                                <div className="text-slate-900 font-bold">Example (regional investment)</div>
+                                <div className="text-slate-600 text-sm mt-1 leading-relaxed">
+                                    A regional city may be trying to attract investment into industries like agribusiness, clean energy, logistics, or tourism — but faces fragmented information, outdated perceptions, and uncertainty about partners, approvals, and timelines.
+                                    Nexus turns the mandate into a structured case: a draft narrative is built live as you complete the intake, then refined into an outreach pack that can help “break the ice” with investors and partners.
+                                </div>
+                            </div>
+                        </div>
                         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-left max-w-5xl mx-auto">
                             <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                                 <div className="text-slate-900 font-bold">You Define</div>
@@ -564,47 +452,198 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
                     {/* Removed workflowSteps cards per user request */}
                 </div>
 
-                {/* 5.5 Proactive Agentic AI Comparison */}
+                {/* 3. Inside the Agentic Brain (how it does it) */}
                 <Section>
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-slate-900">Why Proactive Agentic AI Is Different</h2>
-                        <p className="text-slate-600 mt-2 max-w-4xl mx-auto">
-                            Traditional systems respond to prompts. BW Nexus AI is designed to operate like a digital worker: it structures, challenges, and progresses the work the moment you engage.
+                        <h2 className="text-2xl font-bold text-slate-900">Inside the Agentic Brain: How It Works</h2>
+                        <p className="text-slate-600 mt-2 max-w-4xl mx-auto leading-relaxed">
+                            Here’s the hook: the nine steps are not “just a form.” They become a structured dataset that the Agentic Intelligence OS can run on in real time.
+                            As you work in the <strong>live workspace</strong> with your BW Consultant, the system continuously turns messy real‑world inputs into a decision‑grade case — not as a one‑off chat answer, but as an auditable workflow.
+                        </p>
+                        <p className="text-slate-600 mt-3 max-w-4xl mx-auto leading-relaxed">
+                            At a high level, NSIL (the Nexus Strategic Intelligence Layer) executes a repeatable loop — <strong>validate → debate → score → synthesize → deliver</strong> — so your draft intelligence becomes final deliverables without slow consulting cycles.
+                            NSIL and the scoring system were developed within BW Global Advisory to keep outcomes explainable, traceable, and usable — not a black box.
                         </p>
                     </div>
 
-                    <div className="mt-6 overflow-x-auto">
-                        <table className="w-full text-sm border border-slate-200 bg-white rounded-lg overflow-hidden">
-                            <thead className="bg-slate-50">
-                                <tr>
-                                    <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Feature</th>
-                                    <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Reactive AI (Traditional)</th>
-                                    <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Proactive Agentic AI (BW Nexus)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="border-b border-slate-200">
-                                    <td className="p-3 font-semibold text-slate-800">Proactive, Not Reactive</td>
-                                    <td className="p-3 text-slate-600">Waits for you to find and input data.</td>
-                                    <td className="p-3 text-slate-600">Engages immediately: clarifies constraints, structures the mandate, and progresses the analysis as you speak with the BW Consultant.</td>
-                                </tr>
-                                <tr className="border-b border-slate-200">
-                                    <td className="p-3 font-semibold text-slate-800">Verification‑First</td>
-                                    <td className="p-3 text-slate-600">Can sound confident even when uncertain.</td>
-                                    <td className="p-3 text-slate-600">Flags uncertainty, contradictions, and missing constraints so validation needs are visible and traceable.</td>
-                                </tr>
-                                <tr className="border-b border-slate-200">
-                                    <td className="p-3 font-semibold text-slate-800">Memory‑Augmented</td>
-                                    <td className="p-3 text-slate-600">Forgets context between sessions.</td>
-                                    <td className="p-3 text-slate-600">Retains case context (assumptions, debate outcomes, decisions) so learning compounds over time.</td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-slate-800">Traceable Outputs</td>
-                                    <td className="p-3 text-slate-600">Often a “black box” response.</td>
-                                    <td className="p-3 text-slate-600">Explainable scores + structured reasoning: drivers, pressure points, and a clear “board answer” pathway.</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div className="mt-8 bg-white border border-slate-200 rounded-xl p-6 text-left">
+                        <div className="text-slate-900 font-bold">How the live workspace becomes a report</div>
+                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
+                            Every selection you make across the 9 steps (plus uploads) is captured as structured evidence, assumptions, constraints, and objectives. The OS uses that structure to continuously assemble a living draft — the same draft that later compiles into your report pack.
+                        </div>
+                        <ol className="mt-4 space-y-2 text-slate-700 text-sm leading-relaxed list-decimal list-inside">
+                            <li><strong>Structure:</strong> your intake becomes a case model (objectives, constraints, stakeholders, scenarios, risks, execution, governance).</li>
+                            <li><strong>Validate:</strong> the system flags missing constraints, contradictions, and uncertainty so you can see what must be verified.</li>
+                            <li><strong>Debate:</strong> five specialist personas pressure‑test upside, downside, compliance, unit economics, and feasibility.</li>
+                            <li><strong>Stress‑test:</strong> counterfactual “what if?” checks expose fragility, timeline risk, and dependency failures.</li>
+                            <li><strong>Score:</strong> the 21‑formula suite quantifies drivers, pressure points, and confidence from your inputs.</li>
+                            <li><strong>Synthesize:</strong> narratives, section plans, and templates are assembled for your target audience (boards, partners, regulators).</li>
+                            <li><strong>Deliver:</strong> the draft compiles into multi‑page intelligence reports, comparisons, and outreach letters designed to break the ice.</li>
+                        </ol>
+                    </div>
+
+                    <div className="mt-8 bg-slate-50 border border-slate-200 rounded-xl p-6">
+                        <div className="text-slate-900 font-bold text-sm uppercase tracking-widest">What “Agentic” Means Here</div>
+                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
+                            Agentic AI is not “a chat response.” It is an orchestrated workflow that takes initiative: it asks for missing constraints, challenges assumptions, proposes alternatives, and continuously structures your mandate into decision‑ready outputs.
+                            In practice: the moment you begin engaging with your BW Consultant, the system starts assembling a case — listening, learning your context, and responding immediately.
+                        </div>
+                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
+                            Your BW Consultant is your personal consultant with 24/7 access: always available for clarification, hypothesis testing, risk framing, and “what would break this?” questions.
+                        </div>
+
+                        <div className="mt-4 bg-white border border-slate-200 rounded-lg p-4">
+                            <div className="text-slate-950 font-bold text-xs uppercase tracking-widest">The Five‑Layer Autonomous Reasoning Stack</div>
+                            <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
+                                <li><strong>The Adversarial Input Shield</strong>: validates inputs and flags “garbage in, garbage out” risk before scoring.</li>
+                                <li><strong>The Multi‑Perspective Reasoning Engine</strong>: runs five personas to eliminate bias and uncover blind spots.</li>
+                                <li><strong>The Counterfactual Lab</strong>: tests “what if?” scenarios to stress‑test robustness and timelines.</li>
+                                <li><strong>The Scoring Engines</strong>: applies the proprietary 21‑formula suite to produce explainable quantitative scores.</li>
+                                <li><strong>The Learning Loop</strong>: retains outcomes and case structure so the system improves over time.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                            <h4 className="font-semibold text-slate-800">Five-Layer Reasoning Stack</h4>
+                            <p className="text-xs text-slate-500 mt-1">A layered workflow that validates, debates, simulates counterfactuals, scores, and learns — to reduce bias and improve decision clarity.</p>
+                        </div>
+                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                            <h4 className="font-semibold text-slate-800">NSIL (Reasoning Layer)</h4>
+                            <p className="text-xs text-slate-500 mt-1">Developed by BW Global Advisory, NSIL orchestrates the case lifecycle: validation, debate, stress‑testing, scoring, synthesis, and delivery.</p>
+                        </div>
+                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                            <h4 className="font-semibold text-slate-800">21-Formula Scoring Suite</h4>
+                            <p className="text-xs text-slate-500 mt-1">5 primary engines + 16 derivative indices: explainable scores that translate narratives into quantified drivers, pressure points, and confidence.</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 bg-slate-50 p-5 rounded-lg border border-slate-200 text-left">
+                        <div className="font-semibold text-slate-800">Algorithm Layer (Speed + Consistency)</div>
+                        <div className="text-xs text-slate-600 mt-1 leading-relaxed">
+                            Memory retrieval, contradiction checks, and parallel execution make the same reasoning run fast and repeatably — so the work compounds across sessions and drafts become deliverables.
+                        </div>
+                    </div>
+
+                    <div className="mt-8">
+                        <div className="text-center">
+                            <h3 className="text-xl font-bold text-slate-900">Why Proactive Agentic AI Is Different</h3>
+                            <p className="text-slate-600 mt-2 max-w-4xl mx-auto">
+                                Traditional systems respond to prompts. BW Nexus AI is designed to operate like a digital worker: it structures, challenges, and progresses the work the moment you engage.
+                            </p>
+                        </div>
+                        <div className="mt-6 overflow-x-auto">
+                            <table className="w-full text-sm border border-slate-200 bg-white rounded-lg overflow-hidden">
+                                <thead className="bg-slate-50">
+                                    <tr>
+                                        <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Feature</th>
+                                        <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Reactive AI (Traditional)</th>
+                                        <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Proactive Agentic AI (BW Nexus)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr className="border-b border-slate-200">
+                                        <td className="p-3 font-semibold text-slate-800">Proactive, Not Reactive</td>
+                                        <td className="p-3 text-slate-600">Waits for you to find and input data.</td>
+                                        <td className="p-3 text-slate-600">Engages immediately: clarifies constraints, structures the mandate, and progresses the analysis as you speak with the BW Consultant.</td>
+                                    </tr>
+                                    <tr className="border-b border-slate-200">
+                                        <td className="p-3 font-semibold text-slate-800">Verification‑First</td>
+                                        <td className="p-3 text-slate-600">Can sound confident even when uncertain.</td>
+                                        <td className="p-3 text-slate-600">Flags uncertainty, contradictions, and missing constraints so validation needs are visible and traceable.</td>
+                                    </tr>
+                                    <tr className="border-b border-slate-200">
+                                        <td className="p-3 font-semibold text-slate-800">Memory‑Augmented</td>
+                                        <td className="p-3 text-slate-600">Forgets context between sessions.</td>
+                                        <td className="p-3 text-slate-600">Retains case context (assumptions, debate outcomes, decisions) so learning compounds over time.</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-3 font-semibold text-slate-800">Traceable Outputs</td>
+                                        <td className="p-3 text-slate-600">Often a “black box” response.</td>
+                                        <td className="p-3 text-slate-600">Explainable scores + structured reasoning: drivers, pressure points, and a clear “board answer” pathway.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="text-center mt-8">
+                        <div className="text-slate-600 text-sm mb-4 max-w-3xl mx-auto leading-relaxed">
+                            The full NSIL methodology, including SEAM™ and the complete 21-formula suite and algorithm layer, is documented in the Intelligence Reference Paper.
+                            This is the authoritative explanation of what runs inside the Agentic Intelligence OS and how it transforms your 9-step intake into outputs.
+                        </div>
+                        <button
+                            onClick={() => setShowFormulaModal(true)}
+                            className="px-6 py-3 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto shadow-md"
+                        >
+                            <BookOpen className="w-5 h-5" />
+                            <span>Explore Full Methodology & 21 Formulas</span>
+                        </button>
+                    </div>
+                </Section>
+
+                {/* 4. The Problem */}
+                <Section>
+                    <h2 className="text-2xl font-bold text-slate-900 text-center">The Core Problem is a Lack of Clarity</h2>
+                    <p className="text-center text-slate-600 mt-2 max-w-2xl mx-auto">
+                        BW Nexus AI is not here to compete with or replace what other tools and advisors normally do. It exists because we saw a gap: too many regions remain misunderstood, and too many high-potential opportunities stay invisible.
+                        That gap creates delay, uncertainty, and missed outcomes — and it funnels attention into large cities while regional economies wait.
+                    </p>
+                    <p className="text-center text-slate-600 mt-3 max-w-3xl mx-auto">
+                        This system saves time and reduces risk by turning unknown and unsure markets into structured, validated, decision-ready cases.
+                        Most importantly, it helps unlock places that hold immense wealth in their people — communities simply seeking a quality of life that many take for granted.
+                    </p>
+                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <h4 className="font-semibold text-slate-800">Fragmented Data</h4>
+                            <p className="text-xs text-slate-500 mt-1">No real-time intelligence or single source of truth.</p>
+                        </div>
+                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <h4 className="font-semibold text-slate-800">Slow Consulting Cycles</h4>
+                            <p className="text-xs text-slate-500 mt-1">Too expensive, non-repeatable, and outdated on arrival.</p>
+                        </div>
+                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <h4 className="font-semibold text-slate-800">No Investor-Grade Narrative</h4>
+                            <p className="text-xs text-slate-500 mt-1">Static documents that don't survive scrutiny or execute.</p>
+                        </div>
+                    </div>
+                </Section>
+
+                {/* 5. The Solution & Core Differentiators */}
+                <Section>
+                    <h2 className="text-2xl font-bold text-slate-900 text-center">A New Way to See, Measure, and Deliver Opportunity</h2>
+                    <p className="text-center text-slate-600 mt-2 max-w-3xl mx-auto">
+                        This is not another dashboard. It is a proactive agentic intelligence OS designed to bridge the Global Understanding Gap by creating clarity where ambiguity normally wins.
+                        It models the ecosystem, stress-tests assumptions, and delivers auditable outputs so you can move faster with confidence — without losing the human context that makes development sustainable.
+                    </p>
+                    <div className="mt-8 grid md:grid-cols-2 gap-x-8 gap-y-10">
+                        <FeatureCard icon={Zap} title="Proactive, Not Reactive" description="This system doesn’t wait for perfect inputs. The second you start talking to your BW Consultant, it listens, clarifies, and begins assembling a structured case — while you work." />
+                        <FeatureCard icon={ShieldAlert} title="Verification-First Outputs" description="The workflow is built to reduce hallucination risk: it flags missing constraints, contradictions, and uncertainty so you can see what must be validated before commitments." />
+                        <FeatureCard icon={Brain} title="Memory-Augmented Intelligence" description="It remembers what you’ve built across a case: assumptions, constraints, debate outcomes, and decisions — so the intelligence compounds instead of resetting each session." />
+                        <FeatureCard icon={Users} title="Adversarial Debate" description="To eliminate bias and uncover blind spots, your strategy is debated by five specialist personas — producing an unvarnished view of upside, downside, compliance, unit economics, and feasibility." />
+                    </div>
+                </Section>
+
+                {/* 6. The Entire Meadow Philosophy */}
+                <Section>
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-slate-900">The Entire Meadow Philosophy: Seeing the Whole Picture</h2>
+                        <p className="text-slate-600 mt-2 max-w-4xl mx-auto leading-relaxed">
+                            Most solutions only address the immediate transaction — the “bee and the flower.” But real progress comes from understanding the entire ecosystem: culture, regulation, incentives, capability, timing, and the web of relationships that shape outcomes.
+                        </p>
+                        <p className="text-slate-600 mt-3 max-w-4xl mx-auto leading-relaxed">
+                            BW Nexus AI was created to bridge the gaps that keep high-potential regions and opportunities invisible. Instead of focusing on isolated deals, it models the full context: stakeholders, constraints, and the broader environment. The result is a decision-grade narrative with quantified drivers, pressure points, and actionable next steps—empowering you to act with clarity, not just data.
+                        </p>
+                        <p className="text-slate-600 mt-3 max-w-4xl mx-auto leading-relaxed">
+                            <strong>BW Global Advisory is not here to compete with anyone, but to work alongside everyone who wants to change the way the world sees regional cities and the people who live there.</strong> Our mission is to offer a solution that opens doors for all—making it possible for anyone, from anywhere, to access a system that saves time and money, and brings opportunity to those who have been left out. Where once only a few could afford this level of insight, now it is open to all.
+                        </p>
+                        <p className="text-slate-600 mt-3 max-w-4xl mx-auto leading-relaxed">
+                            This is for those who see, those who know, and—most importantly—for those who want to build true partnerships for a better life in their city, so no one feels left behind. We believe in empowering communities, fostering collaboration, and making sure every voice has a chance to be heard and every region has a chance to thrive.
+                        </p>
+                        <p className="text-slate-600 mt-6 max-w-4xl mx-auto leading-relaxed text-right">
+                            <em>Thank you,<br/>Brayden Walls<br/>Developer & Founder</em>
+                        </p>
                     </div>
                 </Section>
 
