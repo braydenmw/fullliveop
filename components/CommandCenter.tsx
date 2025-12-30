@@ -2,20 +2,18 @@
 import type { EcosystemPulse } from '../services/EventBus';
 import {
     ArrowRight,
-    BookOpen,
     CheckCircle2,
     Lock,
     Play,
     ShieldAlert,
-    Users,
-    Zap,
+    BookOpen,
     X,
     Brain
 } from 'lucide-react';
 
 interface CommandCenterProps {
-    onCreateNew: () => void;
     ecosystemPulse?: EcosystemPulse;
+    onOpenReportGenerator: () => void;
 }
 
 // ============================================================================
@@ -26,15 +24,15 @@ const FormulaDeepDiveModal: React.FC<{ isOpen: boolean; onClose: () => void }> =
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
-            <div className="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-slate-50 rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
                 <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-slate-50 border border-slate-200 rounded">
                             <Brain className="w-5 h-5 text-slate-900" />
                         </div>
                         <div>
-                            <div className="text-slate-950 font-bold text-lg">BW Nexus AI — Intelligence Reference Paper</div>
-                            <div className="text-slate-600 text-xs">NSIL + BW Brain + the 21-formula suite (5 primary engines + 16 derivative indices)</div>
+                            <div className="text-slate-950 font-bold text-lg">BW Nexus AI: System Whitepaper</div>
+                            <div className="text-slate-600 text-xs">The Architecture of Agentic Regional Intelligence</div>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 rounded hover:bg-slate-100">
@@ -42,236 +40,110 @@ const FormulaDeepDiveModal: React.FC<{ isOpen: boolean; onClose: () => void }> =
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto px-6 py-6 custom-scrollbar">
-                    <div className="max-w-5xl mx-auto">
-                        <div className="text-slate-950 font-bold text-2xl leading-tight">Reference & Explanation Paper</div>
-                        <div className="text-slate-600 text-sm mt-2 leading-relaxed">
-                            This document explains how BW Nexus AI thinks (NSIL), what the BW Brain is, how the 21-formula suite works (5 primary engines + 16 derivative indices),
-                            and how the new optimized algorithm layer enables <strong>1–3 second</strong> reasoning.
+                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                    <div className="max-w-4xl mx-auto px-8 py-10 prose prose-slate prose-sm lg:prose-base">
+                        
+                        <h2 className="text-3xl font-serif !text-slate-900">BW Nexus AI: A Hybrid Intelligence Platform</h2>
+                        <p>BW Nexus AI is best understood as a hybrid platform that merges the analytical mind of a top-tier consulting firm with the productive power of a high-end document automation factory. It is a unified environment designed to guide a user from the earliest stages of strategic conception all the way through to the generation of execution-ready deliverables. The system is architected to perform two primary functions in a continuous loop: <strong>Analysis</strong> and <strong>Execution</strong>.</p>
+                        <p>The <strong>Analysis function</strong> is driven by the NSIL brain, which ingests user inputs and transforms them into a live decision model. This model produces a rich tapestry of diagnostic outputs: quantitative scores with confidence bands, qualitative narratives explaining the "why" behind the numbers, adversarial debate logs, and probabilistic stress tests. The goal of this function is to achieve strategic clarity and build unshakeable confidence in the chosen path.</p>
+                        <p>The <strong>Execution function</strong> takes this validated strategy and translates it into the practical instruments needed to bring it to life. The platform's Document Factory can auto-generate a vast library of over 200 document types and 150 letter templates across 14 categories—from legal frameworks like Letters of Intent and Term Sheets to financial models, investor pitch decks, and government outreach correspondence. This seamless integration of analysis and execution eliminates the friction and delay that typically exists between making a decision and acting on it.</p>
+
+                        <h3 className="text-xl font-serif !text-slate-900 mt-12">The 9-Section Comprehensive Intake Framework: Rigor from the Start</h3>
+                        <p>The quality of any analysis is dictated by the quality of its inputs. To ensure maximum rigor, BW Nexus AI utilizes a 9-section comprehensive intake framework that guides the user through a structured process of strategic definition. This is not a simple form; it is a professional-grade system development framework that forces the user to consider every critical dimension of their plan. The nine sections are:</p>
+                        <ol>
+                            <li><strong>Identity & Foundation:</strong> Establishes organizational credibility.</li>
+                            <li><strong>Mandate & Strategy:</strong> Defines the vision and measures of success.</li>
+                            <li><strong>Market & Context:</strong> Analyzes the external forces at play.</li>
+                            <li><strong>Partners & Ecosystem:</strong> Evaluates partner fit and stakeholder landscape.</li>
+                            <li><strong>Financial Model:</strong> Builds a complete, multi-scenario financial picture.</li>
+                            <li><strong>Risk & Mitigation:</strong> Systematically identifies and plans for risks.</li>
+                            <li><strong>Resources & Capability:</strong> Audits the team's ability to execute.</li>
+                            <li><strong>Execution Plan:</strong> Creates a realistic, gated implementation roadmap.</li>
+                            <li><strong>Governance & Monitoring:</strong> Establishes ongoing decision-making structures.</li>
+                        </ol>
+                        <p>This structured intake does more than just collect data; it forces strategic clarity. A built-in validation engine scores the completeness of the intake, providing a "Readiness Score" that prevents users from proceeding with a half-baked plan. This ensures that the NSIL brain is always working with a comprehensive, well-considered set of inputs, dramatically improving the accuracy and relevance of its outputs.</p>
+
+                        <h3 className="text-xl font-serif !text-slate-900 mt-12">The Document Factory: From Analysis to Actionable Deliverables</h3>
+                        <p>A validated strategy is useless if it remains trapped in a dashboard. The BW Nexus AI platform includes a powerful Document Factory designed to convert analytical insights into professional, execution-ready deliverables instantly. This capability closes the gap between decision and action, enabling teams to move with unprecedented speed.</p>
+                        <p>The platform's library contains over 200 unique document types and 150 letter templates across 14 distinct categories, covering the full spectrum of strategic, legal, financial, and operational needs. This includes, but is not limited to:</p>
+                        <ul>
+                            <li><strong>Foundation Documents:</strong> Letters of Intent (LOI), Memorandums of Understanding (MOU), Non-Disclosure Agreements (NDA), Term Sheets.</li>
+                            <li><strong>Strategic Documents:</strong> Business Cases, Feasibility Studies, White Papers, Market Entry Strategies.</li>
+                            <li><strong>Financial & Investment Documents:</strong> Full Financial Models, Private Placement Memorandums (PPM), Valuation Reports, Monte Carlo Simulations.</li>
+                            <li><strong>Risk & Due Diligence Documents:</strong> Comprehensive Due Diligence Reports, AML/KYC Checklists, Sanctions Screening Reports.</li>
+                            <li><strong>Government & Policy Documents:</strong> Policy Briefs, Cabinet Memos, Public-Private Partnership (PPP) Frameworks.</li>
+                        </ul>
+                        <p>When a user requests a document, the system automatically populates the template with the relevant data and analysis from their live model, producing a production-ready draft in seconds. This capability transforms the platform from a mere analytical tool into a true execution engine.</p>
+
+                        <h3 className="text-xl font-serif !text-slate-900 mt-12">Adaptive Elevation: A Platform for All Skill Levels</h3>
+                        <p>Recognizing that strategic initiatives involve stakeholders with varying levels of expertise, BW Nexus AI is built with an "Adaptive Elevation" interface. The system intelligently adjusts the guidance, controls, and data presentation based on the user's profile.</p>
+                        <ul>
+                            <li><strong>For Beginners (e.g., early-stage founders, junior analysts):</strong> The system provides detailed, step-by-step guidance, explains complex concepts with examples, and proactively suggests fields to consider. The interface is supportive and educational, designed to build capability as well as analyze a plan.</li>
+                            <li><strong>For Operators (e.g., project managers, growth teams):</strong> The platform presents structured workflows, operational checklists, and detailed implementation plans. The focus is on execution feasibility, resource allocation, and timeline management.</li>
+                            <li><strong>For Executives (e.g., CEOs, investors, government ministers):</strong> The system delivers compressed analytics, high-level dashboards, and direct controls. It surfaces the most critical insights and decision points, allowing for rapid assessment and decisive action.</li>
+                        </ul>
+                        <p>This adaptive approach ensures that every user, regardless of their role or experience level, receives the precise level of detail and control they need to be effective, making BW Nexus AI a single, unified platform for the entire organization.</p>
+
+                        <h2 className="text-2xl font-serif !text-slate-900 mt-16">Introduction to the Nexus Strategic Intelligence Layer (NSIL)</h2>
+                        <p>The true heart of the BW Nexus AI platform is the Nexus Strategic Intelligence Layer, or NSIL. It is what elevates the system from a sophisticated calculator to a genuine reasoning partner. NSIL is not a single algorithm but a complex, multi-layered architecture designed to mimic the cognitive processes of a diverse team of human experts. When a user submits their strategic plan, NSIL does not just store the inputs; it ingests them into a structured state, builds a dynamic simulation of the plan's ecosystem, and then begins a rigorous process of challenge, analysis, and refinement. The goal of NSIL is to produce recommendations that are not only mathematically sound but also strategically resilient, ethically considered, and operationally feasible. Its architecture is designed for full transparency, ensuring that every conclusion can be audited and traced back to its underlying evidence—the antithesis of a "black box" system.</p>
+
+                        <h3 className="text-xl font-serif !text-slate-900 mt-12">The Five-Layer Autonomous Reasoning Stack</h3>
+                        <p>NSIL's power comes from its unique five-layer reasoning stack. These are not deep, monolithic layers but rather thin, orchestrated reasoning shells that wrap around the core mathematical engines. This design preserves the explainability of the underlying formulas while enabling highly sophisticated adversarial and counterfactual reasoning. The process flows sequentially through these five layers.</p>
+                        <div className="space-y-4 mt-6">
+                            <details className="bg-white p-4 rounded-lg border border-slate-200" open>
+                                <summary className="font-bold cursor-pointer text-base">Layer 1: The Adversarial Input Shield (Pre-Flight Validation)</summary>
+                                <p className="mt-2 text-slate-700">Before any analysis begins, every piece of user-provided information passes through the Input Shield. This layer acts as a gatekeeper, protecting the integrity of the entire system. It cross-references claims against external authoritative data sources, such as World Bank governance indicators, OFAC sanctions lists, and real-time market data. It checks for internal contradictions within the user's plan, flags high-risk patterns associated with fraud or over-optimism, and ensures all critical context is present. Weak or suspicious inputs are flagged with clear explanations, preventing the "garbage in, garbage out" problem that plagues so many analytical systems.</p>
+                            </details>
+                            <details className="bg-white p-4 rounded-lg border border-slate-200">
+                                <summary className="font-bold cursor-pointer text-base">Layer 2: The Multi-Perspective Reasoning Engine (The Persona Debate)</summary>
+                                <p className="mt-2 text-slate-700">Once inputs are validated, NSIL spawns five distinct AI "personas," each programmed with a different cognitive motivation. These personas evaluate the strategic plan in parallel, creating a structured, evidence-backed debate. This adversarial process is designed to systematically eliminate cognitive biases and illuminate the problem from all possible angles. The findings of this debate form the qualitative core of the system's analysis.</p>
+                            </details>
+                            <details className="bg-white p-4 rounded-lg border border-slate-200">
+                                <summary className="font-bold cursor-pointer text-base">Layer 3: The Counterfactual Lab (Answering "What If?")</summary>
+                                <p className="mt-2 text-slate-700">NSIL then moves beyond analyzing the proposed plan to simulating alternative realities. The Counterfactual Lab automatically generates and evaluates a range of different scenarios. It answers critical "what if" questions: What if the primary assumptions are wrong? What if market conditions shift dramatically? What if we choose a different partner? What if we do nothing at all? The lab produces scenario deltas, probability distributions, and a "regret analysis" that quantifies the potential cost of making the wrong choice. This provides decision-makers with a full understanding of the trade-offs and the robustness of their chosen strategy.</p>
+                            </details>
+                            <details className="bg-white p-4 rounded-lg border border-slate-200">
+                                <summary className="font-bold cursor-pointer text-base">Layer 4: The Scoring Engines (The Mathematical Core)</summary>
+                                <p className="mt-2 text-slate-700">With the benefit of the validated inputs, persona debate, and counterfactual analysis, the system then runs its full suite of 21 proprietary mathematical formulas. These engines produce the hard quantitative scores for the plan, including the overall Success Probability Index (SPI™), Regional Return on Investment (RROI™), and Strategic Cash Flow (SCF™). Because these calculations are run after the adversarial and counterfactual analysis, the inputs are far more robust and the resulting scores are a more accurate reflection of reality.</p>
+                            </details>
+                            <details className="bg-white p-4 rounded-lg border border-slate-200">
+                                <summary className="font-bold cursor-pointer text-base">Layer 5: The Learning Loop (Continuous Improvement)</summary>
+                                <p className="mt-2 text-slate-700">The final layer ensures that NSIL is not a static system but one that continuously learns and improves. It tracks the user's decisions, and later, the real-world outcomes of those decisions. By comparing its predictions to actual results, the system recalibrates the internal weightings of its mathematical models, identifies patterns of success and failure, and measures its own over- or under-confidence. This feedback loop allows the platform's accuracy and predictive power to grow with every engagement.</p>
+                            </details>
                         </div>
 
-                        <div className="mt-4 bg-slate-50 border border-slate-200 rounded-lg p-4">
-                            <div className="text-slate-950 font-bold text-sm">Quick orientation</div>
-                            <div className="text-slate-700 text-sm mt-1 leading-relaxed">
-                                Think of BW Nexus AI as a repeatable advisory workflow: <strong>validate → debate → score → synthesize → deliver</strong>. The formulas produce explainable scores;
-                                the algorithm suite makes the same reasoning run fast, consistently, and with memory.
-                            </div>
-                        </div>
+                        <h3 className="text-xl font-serif !text-slate-900 mt-12">How Personas Work: The Skeptic, Advocate, Regulator, Accountant, and Operator</h3>
+                        <p>The Multi-Perspective Reasoning Engine is central to NSIL's ability to overcome bias. The five personas are:</p>
+                        <ul>
+                            <li><strong>The Skeptic:</strong> This persona's sole motivation is to find the reasons a plan will fail. It actively searches for deal-killers, unstated assumptions, over-optimism, and hidden downside risks. It constructs and analyzes the worst-case scenario and calculates the overall probability of failure.</li>
+                            <li><strong>The Advocate:</strong> As a direct counterpoint to the Skeptic, the Advocate's motivation is to find all potential upside. It identifies hidden synergies, optionality, and strategic levers that could be used to increase value. It constructs the best-case scenario and seeks to uncover opportunities that others may have missed.</li>
+                            <li><strong>The Regulator:</strong> This persona is concerned with legality, ethics, and compliance. It checks the proposed plan against sanctions lists, legal precedents, and regulatory requirements in the target jurisdiction. It estimates clearance timelines and flags any potential ethical or compliance-related concerns.</li>
+                            <li><strong>The Accountant:</strong> Focused on economic durability, the Accountant validates all financial projections. It stress-tests cash flow models, analyzes margin integrity, calculates break-even timing, and provides an overall rating of the plan's financial viability.</li>
+                            <li><strong>The Operator:</strong> This persona is grounded in the realities of execution. It tests the plan's feasibility by examining the required team capabilities, supply chain robustness, and infrastructure needs. It identifies operational gaps and assesses the realism of the implementation plan.</li>
+                        </ul>
+                        <p>The outputs from these five personas are then synthesized. Agreements between them form the basis for high-confidence recommendations. Disagreements are explicitly recorded and presented to the user as key decision points, ensuring that uncertainty is made transparent, not hidden behind a veneer of false certainty.</p>
 
-                        <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-                            <div className="lg:col-span-4">
-                                <div className="bg-white border border-slate-200 rounded-lg p-4 sticky top-4">
-                                    <div className="text-slate-950 font-bold text-sm">Contents</div>
-                                    <ul className="mt-3 space-y-2 text-sm">
-                                        <li><a className="text-slate-950 hover:underline" href="#ref-agentic">0) Agentic AI status</a></li>
-                                        <li><a className="text-slate-950 hover:underline" href="#ref-nsil">1) What NSIL is</a></li>
-                                        <li><a className="text-slate-950 hover:underline" href="#ref-brain">2) The BW Brain</a></li>
-                                        <li><a className="text-slate-950 hover:underline" href="#ref-algorithms">3) Optimized algorithm layer (1–3s)</a></li>
-                                        <li><a className="text-slate-950 hover:underline" href="#ref-primary">4) The 5 primary engines</a></li>
-                                        <li><a className="text-slate-950 hover:underline" href="#ref-derivatives">5) The 16 derivative indices</a></li>
-                                        <li><a className="text-slate-950 hover:underline" href="#ref-reportbuild">6) How reports are built</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <h3 className="text-xl font-serif !text-slate-900 mt-12">How NSIL Learns: Motivation Detection, Outcome Tracking, and Calibration</h3>
+                        <p>NSIL's ability to improve over time is driven by a sophisticated learning architecture. This is not abstract machine learning, but a structured, auditable process.</p>
+                        <ul>
+                            <li><strong>Motivation Detection:</strong> The system learns the user's individual decision-making profile. It observes which types of evidence the user prioritizes, their tolerance for risk, and their strategic goals. Over time, it adjusts how it frames insights to be most effective for that specific user, for example, by leading with the quantitative data for an analytical user or with the strategic narrative for a visionary one.</li>
+                            <li><strong>Outcome Tracking:</strong> This is the core of the learning loop. The platform allows users to record the actual outcomes of their decisions. Did the partnership succeed? What was the actual ROI? How long did activation really take? This real-world data is the ground truth against which the system's predictions are measured.</li>
+                            <li><strong>Calibration:</strong> By comparing its predictions to these outcomes, NSIL continuously recalibrates the internal weights of its scoring models. It identifies where its forecasts were overconfident or underconfident and adjusts its algorithms accordingly. This process is transparent, with the system providing "Learning Insights" that explain what has been adjusted and why, ensuring the user always understands how the system's "thinking" is evolving.</li>
+                        </ul>
+                        <p>This multi-faceted learning process ensures that BW Nexus AI is not a static tool but a true partner that grows smarter and more attuned to the user's context with every single decision.</p>
 
-                            <div className="lg:col-span-8">
-                                <div className="space-y-4">
-                                    <details open className="bg-white border border-slate-200 rounded-lg p-4">
-                                        <summary id="ref-agentic" className="cursor-pointer select-none text-slate-950 font-bold text-lg">
-                                            0) Agentic AI status (implemented, transparent)
-                                        </summary>
-                                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                                            BW Nexus AI operates as a proactive, agentic digital worker. The optimized algorithm suite is <strong>implemented</strong> and orchestrated by the <em>OptimizedAgenticBrain</em>, enabling full reasoning loops in <strong>1–3 seconds</strong>. Outputs are <strong>not a black box</strong>: every claim is verified, traceable, and delivered with provenance.
-                                        </div>
-                                        <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                            <li>Autonomous loop: validate → debate → score → synthesize → deliver.</li>
-                                            <li>Early-stopping multi-persona debate + contradiction checks.</li>
-                                            <li>Memory retrieval with relevance ranking improves case recall.</li>
-                                            <li>Parallel formula graph executes the 21-formula suite efficiently.</li>
-                                        </ul>
-                                        <div className="text-slate-700 text-xs mt-3 leading-relaxed">
-                                            For a narrative walkthrough, see “The Agentic Brain: How It Works” in the main page section below.
-                                        </div>
-                                    </details>
-                                    <details open className="bg-white border border-slate-200 rounded-lg p-4">
-                                        <summary id="ref-nsil" className="cursor-pointer select-none text-slate-950 font-bold text-lg">
-                                            1) What NSIL is (in one page)
-                                        </summary>
-                                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                                            NSIL (Nexus Strategic Intelligence Layer) is the reasoning layer that wraps around the scoring engines. It does four things:
-                                            (1) validates inputs, (2) runs adversarial multi-agent debate, (3) applies mathematical scoring, and (4) produces structured outputs
-                                            with evidence trails and confidence levels. The goal is not “information” — it is “advice that survives scrutiny.”
-                                        </div>
-                                    </details>
+                        <h2 className="text-2xl font-serif !text-slate-900 mt-16">The Mathematical Core: The 21 Proprietary Formulas</h2>
+                        <p>A core philosophy of BW Nexus AI is that the most robust decisions arise from the fusion of rigorous quantitative analysis and nuanced qualitative insight. The platform operationalizes this by pairing every mathematical output with AI-written narratives that explain the results in plain language. The numbers provide the objective "what," while the narratives, informed by the persona debates, provide the contextual "why." This ensures that users are never left staring at a score without understanding the drivers behind it. The system's mathematical framework is built upon 21 proprietary formulas, comprising 5 primary engines and 16 derivative models, all designed to work in concert to provide a holistic view of any strategic initiative which incorporate the Agentic Brain and the NSIL together.</p>
 
-                                    <details open className="bg-white border border-slate-200 rounded-lg p-4">
-                                        <summary id="ref-brain" className="cursor-pointer select-none text-slate-950 font-bold text-lg">
-                                            2) The BW Brain (how it thinks)
-                                        </summary>
-                                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                                            The BW Brain is a neuro-symbolic architecture: it combines pattern recognition (neural) with explainable reasoning (symbolic).
-                                            Every conclusion can be traced to drivers, pressure points, debate arguments, and formula outputs.
-                                        </div>
-                                        <div className="text-slate-700 text-sm mt-3 leading-relaxed">
-                                            A built-in 5-persona debate reduces bias and forces real trade-offs into the open:
-                                        </div>
-                                        <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                            <li><strong>Skeptic</strong>: hunts deal-killers, false certainty, and hidden downside.</li>
-                                            <li><strong>Advocate</strong>: finds upside, synergies, and value levers.</li>
-                                            <li><strong>Regulator</strong>: checks compliance pathways, sanctions risk, and ethical constraints.</li>
-                                            <li><strong>Accountant</strong>: validates cash flow logic, margins, and economic durability.</li>
-                                            <li><strong>Operator</strong>: tests execution feasibility: team, supply chains, infrastructure.</li>
-                                        </ul>
-                                    </details>
-
-                                    <details open className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                                        <summary id="ref-algorithms" className="cursor-pointer select-none text-slate-950 font-bold text-lg">
-                                            3) Optimized algorithm layer (the “fast-thinking” brain)
-                                        </summary>
-                                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                                            The 21 formulas define the scoring logic. The optimized algorithm layer is <strong>fully implemented</strong> and makes the workflow fast and scalable — targeting <strong>1–3 seconds</strong> for a full reasoning pass.
-                                            It adds memory retrieval, contradiction checks, parallel scheduling, and early-stopping debate, all orchestrated by the <em>OptimizedAgenticBrain</em>.
-                                        </div>
-                                        <div className="mt-3 bg-white border border-slate-200 rounded p-3">
-                                            <div className="text-slate-950 font-bold text-xs uppercase tracking-widest">Algorithm suite (implemented)</div>
-                                            <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                                <li><strong>VectorMemoryIndex</strong>: fast similarity search of prior cases (ANN/LSH + cosine).</li>
-                                                <li><strong>SATContradictionSolver</strong>: flags conflicting intake constraints before scoring.</li>
-                                                <li><strong>BayesianDebateEngine</strong>: persona debate with Bayesian updating + early stopping on consensus.</li>
-                                                <li><strong>DAGScheduler</strong>: executes the 21-formula graph in parallel with memoization.</li>
-                                                <li><strong>LazyEvalEngine</strong>: computes derivative indices only when needed.</li>
-                                                <li><strong>DecisionTreeSynthesizer</strong>: selects the best report template and section plan.</li>
-                                                <li><strong>GradientRankingEngine</strong>: learning-to-rank for relevance (improves memory retrieval quality).</li>
-                                                <li><strong>OptimizedAgenticBrain</strong>: orchestrates everything into an executive brief + insights.</li>
-                                            </ul>
-                                        </div>
-                                        <div className="mt-3 text-slate-700 text-sm leading-relaxed">
-                                            Practical effect: faster iteration, clearer contradictions, better retrieval of relevant prior cases, and more consistent report structure. Outputs are <strong>transparent</strong> and <strong>auditable</strong> — not a black box.
-                                        </div>
-                                    </details>
-
-                                    <details open className="bg-white border border-slate-200 rounded-lg p-4">
-                                        <summary id="ref-primary" className="cursor-pointer select-none text-slate-950 font-bold text-lg">
-                                            4) The 5 primary engines (the core formulas)
-                                        </summary>
-                                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                                            These engines generate the first layer of hard math. They are the backbone of scoring, scenario stress-testing, and confidence.
-                                        </div>
-
-                                        <div className="mt-4 space-y-4">
-                                            <div>
-                                                <div className="text-slate-950 font-bold">SPI™ — Success Probability Index</div>
-                                                <div className="text-slate-700 text-sm mt-1 leading-relaxed">
-                                                    Estimates probability of success based on weighted factors (market readiness, partner fit, regulatory clarity, execution feasibility, and risk alignment).
-                                                    Output is a 0–100 score with drivers and pressure points.
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="text-slate-950 font-bold">RROI™ — Regional Return on Investment</div>
-                                                <div className="text-slate-700 text-sm mt-1 leading-relaxed">
-                                                    Projects regional ROI with local multipliers (cost structure, incentives, infrastructure, growth trajectory).
-                                                    Output is a risk-adjusted return range rather than a single-point guess.
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="text-slate-950 font-bold">SEAM™ — Stakeholder & Entity Alignment</div>
-                                                <div className="text-slate-700 text-sm mt-1 leading-relaxed">
-                                                    Maps the ecosystem (stakeholders, incentives, conflicts, influence). Flags alignment breakdowns early — where most “good on paper” deals fail later.
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="text-slate-950 font-bold">IVAS™ — Investment Validation Assessment</div>
-                                                <div className="text-slate-700 text-sm mt-1 leading-relaxed">
-                                                    Stress-tests time-to-activation and friction using scenario ranges (e.g., P10 / P50 / P90 timelines). Converts “we think we can do it fast” into a measurable activation profile.
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="text-slate-950 font-bold">SCF™ — Strategic Cash Flow / Confidence Framework</div>
-                                                <div className="text-slate-700 text-sm mt-1 leading-relaxed">
-                                                    Converts readiness + capture + timeline + debate consensus into an overall confidence-grade. This is the “board answer”: proceed, pause, or re-structure — with reasons.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </details>
-
-                                    <details open className="bg-white border border-slate-200 rounded-lg p-4">
-                                        <summary id="ref-derivatives" className="cursor-pointer select-none text-slate-950 font-bold text-lg">
-                                            5) The 16 derivative indices (specialist formulas)
-                                        </summary>
-                                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                                            These indices extend the primary engines with specialist domain scores. They help explain <em>why</em> a plan is strong/weak and what to fix.
-                                        </div>
-
-                                        <div className="mt-4">
-                                            <div className="text-slate-950 font-bold">Strategic indices</div>
-                                            <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                                <li><strong>BARNA</strong> — Barriers Analysis: entry barrier strength (regulatory, competitive, capital, market access, cultural).</li>
-                                                <li><strong>NVI</strong> — Network Value Index: value of partner networks and ecosystem connectivity.</li>
-                                                <li><strong>CRI</strong> — Country Risk Index: country-level risk across political/economic/operational dimensions.</li>
-                                                <li><strong>FRS</strong> — Flywheel Readiness Score: likelihood of compounding growth loops once activated.</li>
-                                            </ul>
-                                        </div>
-
-                                        <div className="mt-4">
-                                            <div className="text-slate-950 font-bold">Operational indices</div>
-                                            <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                                <li><strong>CAP</strong> — Capability Assessment Profile: organizational readiness to execute and adapt.</li>
-                                                <li><strong>AGI</strong> — Activation Gradient Index: activation velocity and gating factors.</li>
-                                                <li><strong>VCI</strong> — Value Creation Index: synergy and value-creation potential.</li>
-                                                <li><strong>ATI</strong> — Asset Transfer Index: complexity/risk of transferring assets, IP, or operations.</li>
-                                                <li><strong>ESI</strong> — Ecosystem Strength Index: strength of suppliers, talent, infrastructure, services.</li>
-                                                <li><strong>ISI</strong> — Integration Speed Index: expected integration speed post-deal/post-entry.</li>
-                                                <li><strong>OSI</strong> — Operational Synergy Index: operational synergy potential from combination.</li>
-                                                <li><strong>TCO</strong> — Total Cost of Ownership: lifecycle costs (including hidden and exit costs).</li>
-                                            </ul>
-                                        </div>
-
-                                        <div className="mt-4">
-                                            <div className="text-slate-950 font-bold">Risk indices</div>
-                                            <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                                <li><strong>PRI</strong> — Political Risk Index: regime stability, policy consistency, expropriation/sovereign risks.</li>
-                                                <li><strong>RNI</strong> — Regulatory Navigation Index: regulatory complexity and compliance effort.</li>
-                                                <li><strong>SRA</strong> — Strategic Risk Assessment: market/execution/competitive/timing risk profile.</li>
-                                                <li><strong>IDV</strong> — Investment Default Variance: variance from expected outcomes (projection fragility).</li>
-                                            </ul>
-                                        </div>
-
-                                        <div className="mt-4 bg-slate-50 border border-slate-200 rounded p-4">
-                                            <div className="text-slate-950 font-bold text-sm">Note on “21”</div>
-                                            <div className="text-slate-700 text-sm mt-1 leading-relaxed">
-                                                BW Nexus AI refers to the 21-formula suite as the 5 primary engines + 16 derivative indices shown above.
-                                                In some modes, additional diagnostics may be computed for deeper analysis — but the “21” is the baseline scoring suite.
-                                            </div>
-                                        </div>
-                                    </details>
-
-                                    <details open className="bg-white border border-slate-200 rounded-lg p-4">
-                                        <summary id="ref-reportbuild" className="cursor-pointer select-none text-slate-950 font-bold text-lg">
-                                            6) How these formulas build your reports
-                                        </summary>
-                                        <ol className="list-decimal list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                            <li><strong>Intake</strong>: mission, constraints, region, partners, risk appetite are structured.</li>
-                                            <li><strong>Validation</strong>: contradictions and missing constraints are flagged early.</li>
-                                            <li><strong>Memory</strong>: similar prior cases are retrieved and ranked for relevance.</li>
-                                            <li><strong>Debate</strong>: 5 personas argue for/against, attaching evidence and decision points.</li>
-                                            <li><strong>Scoring</strong>: the 21-formula suite produces quantified scores, grades, drivers, and pressure points.</li>
-                                            <li><strong>Synthesis</strong>: templates and sections are selected, then narratives are assembled for the chosen audience.</li>
-                                            <li><strong>Deliverables</strong>: outputs are generated as decision-ready documents with traceable rationale.</li>
-                                        </ol>
-                                    </details>
-
-                                    <div className="mt-4 text-xs text-slate-500">
-                                        © 2025 BW Global Advisory. This reference paper describes proprietary methods and is provided for explanation and user orientation.
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="mt-8 text-xs text-slate-500 text-center">
+                            © 2025 BW Global Advisory. This whitepaper describes proprietary methods and is provided for explanation and user orientation.
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white border-t border-slate-200 px-6 py-3 flex items-center justify-end">
-                    <button onClick={onClose} className="px-5 py-2 bg-blue-700 text-white text-sm font-bold rounded hover:bg-blue-800">
-                        Close
+                <div className="bg-white border-t border-slate-200 px-6 py-3 flex items-center justify-end flex-shrink-0">
+                    <button onClick={onClose} className="px-6 py-2 bg-blue-700 text-white text-sm font-bold rounded-lg hover:bg-blue-800">
+                        Close Whitepaper
                     </button>
                 </div>
             </div>
@@ -285,26 +157,12 @@ const Section: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
     </div>
 );
 
-const FeatureCard: React.FC<{ icon: React.ElementType; title: string; description: string; }> = ({ icon: Icon, title, description }) => (
-    <div className="flex items-start gap-4">
-        <div className="bg-blue-100 text-blue-700 p-3 rounded-lg mt-1 flex-shrink-0">
-            <Icon size={20} />
-        </div>
-        <div>
-            <h4 className="font-bold text-slate-900 text-base">{title}</h4>
-            <p className="text-slate-600 text-sm mt-1 leading-relaxed">{description}</p>
-        </div>
-    </div>
-);
-
-const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPulse: _ecosystemPulse }) => {
+const CommandCenter: React.FC<CommandCenterProps> = ({ onOpenReportGenerator }) => {
     const [accepted, setAccepted] = useState(false);
     const [showFormulaModal, setShowFormulaModal] = useState(false);
 
-    void _ecosystemPulse;
-
     return (
-        <div className="flex-1 w-full h-full min-h-0 overflow-y-auto bg-slate-100 font-sans text-slate-800">
+        <div className="flex-1 w-full h-full min-h-0 overflow-y-auto bg-slate-100 font-sans text-slate-800 custom-scrollbar">
             <div className="max-w-6xl mx-auto py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 space-y-16">
 
                 {/* 1. Header & The Big Idea */}
@@ -345,234 +203,135 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
                     </div>
                 </Section>
 
-                {/* 2. What This Turns Into (Live Workspace + Draft Outputs) */}
-                <div>
-                    <div className="text-center">
+                {/* 2. The Clarity Engine & 9-Step Intake */}
+                <div id="workflow">
+                    <div className="text-center mb-10">
                         <h2 className="text-2xl font-bold text-slate-900">Your Clarity Engine: From Mandate to Intelligence in Minutes</h2>
                         <p className="text-slate-600 mt-2 max-w-3xl mx-auto">
                             BW Nexus AI is a proactive digital worker that transforms strategic goals into investor-ready intelligence through a simple workflow.
-                            Inside the platform, you work in a <strong>live workspace</strong>: the moment you start Step 1 of 9, you and your BW Consultant begin building a living draft (like writing on a piece of paper).
-                            Every selection you make — plus any uploads you provide — becomes structured material that compiles into multi-page deliverables.
+                            Inside the platform, you work in a <strong>live workspace</strong>. The moment you start, you and your BW Consultant begin building a living draft. Every selection becomes structured material that compiles into multi-page deliverables.
                         </p>
-                        <div className="mt-6 max-w-5xl mx-auto">
-                            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm text-left">
-                                <div className="text-slate-900 font-bold">Example (regional investment)</div>
-                                <div className="text-slate-600 text-sm mt-1 leading-relaxed">
-                                    A regional city may be trying to attract investment into industries like agribusiness, clean energy, logistics, or tourism — but faces fragmented information, outdated perceptions, and uncertainty about partners, approvals, and timelines.
-                                    Nexus turns the mandate into a structured case: a draft narrative is built live as you complete the intake, then refined into an outreach pack that can help “break the ice” with investors and partners.
-                                </div>
-                            </div>
-                        </div>
-                        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-left max-w-5xl mx-auto">
-                            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                                <div className="text-slate-900 font-bold">You Define</div>
-                                <div className="text-slate-600 text-sm mt-1 leading-relaxed">
-                                    State your mandate, target region, constraints, and risk appetite. Speak or type — your BW Consultant listens and clarifies.
-                                </div>
-                            </div>
-                            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                                <div className="text-slate-900 font-bold">The Agent Executes</div>
-                                <div className="text-slate-600 text-sm mt-1 leading-relaxed">
-                                    Validates, debates, scores, and synthesizes: NSIL orchestrates the 5-persona debate and the 21-formula suite to build an explainable case.
-                                </div>
-                            </div>
-                            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                                <div className="text-slate-900 font-bold">You Receive</div>
-                                <div className="text-slate-600 text-sm mt-1 leading-relaxed">
-                                    Board-ready outputs: scorecards, debate outcomes, risk registers, and actionable next steps — structured for partners and regulators.
-                                </div>
-                            </div>
+                    </div>
+
+                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm text-left max-w-5xl mx-auto mb-10">
+                        <div className="text-slate-900 font-bold">Example (regional investment)</div>
+                        <div className="text-slate-600 text-sm mt-1 leading-relaxed">
+                            A regional city may be trying to attract investment into industries like agribusiness, clean energy, logistics, or tourism — but faces fragmented information, outdated perceptions, and uncertainty about partners, approvals, and timelines.
+                            Nexus turns the mandate into a structured case: a draft narrative is built live as you complete the intake, then refined into an outreach pack that can help “break the ice” with investors and partners.
                         </div>
                     </div>
 
-                    <Section className="mt-10">
+                    <Section>
                         <div className="text-center">
                             <h3 className="text-xl font-bold text-slate-900">The 9-Step System Development Intake (What You Fill In)</h3>
                             <p className="text-slate-600 mt-2 max-w-4xl mx-auto">
                                 These are the nine structured sections inside the platform. Your selections here become the raw material for debate, scoring, and the final deliverables.
                             </p>
                         </div>
-
                         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">1) Identity</div>
+                                <div className="font-semibold text-slate-800">1. Identity</div>
                                 <div className="text-xs text-slate-500 mt-1">Captures org type/stage, capacity bands, and mission ownership/clearance context.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> entity baseline + constraints anchor for the entire case.</div>
                             </div>
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">2) Mandate</div>
+                                <div className="font-semibold text-slate-800">2. Mandate</div>
                                 <div className="text-xs text-slate-500 mt-1">Defines vision, horizon, weighted objectives, problem statement, and non‑negotiables.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> mandate brief + objective weighting for scoring.</div>
                             </div>
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">3) Market</div>
+                                <div className="font-semibold text-slate-800">3. Market</div>
                                 <div className="text-xs text-slate-500 mt-1">Sets geographies, trends, barriers, infrastructure, and opportunity sizing assumptions.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> market readiness drivers + evidence checklist.</div>
                             </div>
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">4) Partners</div>
+                                <div className="font-semibold text-slate-800">4. Partners</div>
                                 <div className="text-xs text-slate-500 mt-1">Defines archetypes, stakeholder influence vs alignment, dependencies, and partner profile.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> SEAM stakeholder map inputs + partner‑fit criteria.</div>
                             </div>
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">5) Financial</div>
+                                <div className="font-semibold text-slate-800">5. Financial</div>
                                 <div className="text-xs text-slate-500 mt-1">Builds scenarios, capex/opex assumptions, incentives, payback and return bands.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> RROI ranges + scenario table + viability narrative.</div>
                             </div>
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">6) Risks</div>
+                                <div className="font-semibold text-slate-800">6. Risks</div>
                                 <div className="text-xs text-slate-500 mt-1">Captures categories, likelihood/impact, mitigation actions, owners, and monitoring.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> risk register + mitigation plan + red‑flag list.</div>
                             </div>
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">7) Capabilities</div>
+                                <div className="font-semibold text-slate-800">7. Capabilities</div>
                                 <div className="text-xs text-slate-500 mt-1">Assesses team depth, technical maturity, capability gaps, and support needs.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> capability assessment + gap‑closure plan.</div>
                             </div>
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">8) Execution</div>
+                                <div className="font-semibold text-slate-800">8. Execution</div>
                                 <div className="text-xs text-slate-500 mt-1">Defines phased roadmap, gates, owners, budgets, buffers, and activation sequencing.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> implementation roadmap + IVAS activation profile.</div>
                             </div>
                             <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                <div className="font-semibold text-slate-800">9) Governance</div>
+                                <div className="font-semibold text-slate-800">9. Governance</div>
                                 <div className="text-xs text-slate-500 mt-1">Sets decision rights, cadence, KPIs, compliance checks, and accountability structure.</div>
                                 <div className="text-xs text-slate-700 mt-2"><strong>Creates:</strong> governance operating model + audit trail backbone.</div>
                             </div>
                         </div>
-
                         <div className="mt-8 bg-white border border-slate-200 rounded-lg p-5">
                             <div className="text-slate-900 font-bold">What this produces (simply)</div>
                             <div className="text-slate-700 text-sm mt-2 leading-relaxed">
                                 A complete, investor‑grade deliverable pack: an executive summary, scorecards (SPI™, RROI™, SEAM™, IVAS™, SCF™), debate outcomes, a risk register, and an implementation narrative — structured for boards, partners, and regulators.
                             </div>
                         </div>
+                        <div className="mt-10 text-slate-900 font-bold text-lg text-center">How the 9-Step Intake Becomes a Living, Auditable Report</div>
+                        <div className="mt-2 text-slate-700 text-sm leading-relaxed">
+                            <strong>Structure:</strong> Your intake becomes a case model (objectives, constraints, stakeholders, scenarios, risks, execution, governance).<br/>
+                            <strong>Validate:</strong> The system flags missing constraints, contradictions, and uncertainty so you can see what must be verified.<br/>
+                            <strong>Debate:</strong> Five specialist personas pressure‑test upside, downside, compliance, unit economics, and feasibility.<br/>
+                            <strong>Stress‑test:</strong> Counterfactual “what if?” checks expose fragility, timeline risk, and dependency failures.<br/>
+                            <strong>Score:</strong> The 21‑formula suite quantifies drivers, pressure points, and confidence from your inputs.<br/>
+                            <strong>Synthesize:</strong> Narratives, section plans, and templates are assembled for your target audience (boards, partners, regulators).<br/>
+                            <strong>Deliver:</strong> The draft compiles into multi‑page intelligence reports, comparisons, and outreach letters designed to break the ice.<br/>
+                            Throughout the workflow, Nexus maintains an <strong>assumptions + verification register</strong> (what’s known, what’s uncertain, and what must be validated) so partners and decision‑makers can see exactly where confidence comes from.
+                        </div>
+                        <div className="mt-10 text-slate-900 font-bold text-lg text-center">Adaptive Elevation: A Platform for All Skill Levels</div>
+                        <div className="mt-2 text-slate-700 text-sm leading-relaxed">
+                            Recognizing that strategic initiatives involve stakeholders with varying levels of expertise, BW Nexus AI is built with an "Adaptive Elevation" interface. The system intelligently adjusts the guidance, controls, and data presentation based on the user's profile.<br/>
+                            <ul className="list-disc ml-6 mt-2">
+                                <li><strong>For Beginners:</strong> The system provides detailed, step-by-step guidance, explains complex concepts with examples, and proactively suggests fields to consider. The interface is supportive and educational, designed to build capability as well as analyze a plan.</li>
+                                <li><strong>For Operators:</strong> The platform presents structured workflows, operational checklists, and detailed implementation plans. The focus is on execution feasibility, resource allocation, and timeline management.</li>
+                                <li><strong>For Executives:</strong> The system delivers compressed analytics, high-level dashboards, and direct controls. It surfaces the most critical insights and decision points, allowing for rapid assessment and decisive action.</li>
+                            </ul>
+                            This adaptive approach ensures that every user, regardless of their role or experience level, receives the precise level of detail and control they need to be effective, making BW Nexus AI a single, unified platform for the entire organization.
+                        </div>
+                        <div className="mt-10 text-slate-900 font-bold text-lg text-center">The Document Factory: Instant, Professional Deliverables</div>
+                        <div className="mt-2 text-slate-700 text-sm leading-relaxed">
+                            The BW Nexus AI platform includes a powerful Document Factory designed to convert analytical insights into professional, execution-ready deliverables instantly. This capability closes the gap between decision and action, enabling teams to move with unprecedented speed.<br/>
+                            The platform's library contains over 200 unique document types and 150 letter templates across 14 distinct categories, covering the full spectrum of strategic, legal, financial, and operational needs.
+                        </div>
+                        <div className="mt-10 text-slate-900 font-bold text-lg text-center">Inside the Agentic Brain: The Heart and Brains of Why This All Works</div>
+                        <div className="mt-2 text-slate-700 text-sm leading-relaxed">
+                            The Agentic Brain is the operating “digital worker” inside BW Nexus AI that does the end-to-end work of turning a person’s raw context into a structured, decision‑grade deliverable pack. It is not a chatbot that waits for a prompt and returns a single answer; it is an orchestrated workflow engine that continuously builds a case as the user engages.<br/>
+                            The Agentic Brain’s job is to take messy real-world information—goals, constraints, political realities, partner dynamics, uncertainty, and incomplete data—and convert it into a structured case model that can be validated, pressure‑tested, quantified, and written into a report that survives scrutiny. It behaves like an internal advisory team compressed into a repeatable system: it asks for missing constraints, challenges assumptions, proposes alternatives, and progresses the work instead of passively responding.<br/>
+                            The Agentic Brain uses the 9-step intake as its structured data foundation, because this is what makes the system computable and repeatable. Each step captures a category of decision information (Identity, Mandate, Market, Partners, Financial, Risks, Capabilities, Execution, Governance) and converts it into structured variables: objectives and weights, constraints, scenarios, assumptions, evidence requirements, stakeholders and influence, risk items and mitigations, capability gaps, timeline gates, and governance controls. This becomes a living dataset—an evolving “case file”—rather than disconnected notes. Once the dataset exists, the Agentic Brain can run the same reasoning workflow every time, producing consistent outputs that can be audited and explained.
+                        </div>
+                        <div className="mt-10 text-slate-900 font-bold text-lg text-center">What is NSIL?</div>
+                        <div className="mt-2 text-slate-700 text-sm leading-relaxed">
+                            NSIL (the Nexus Strategic Intelligence Layer) is the orchestration loop the Agentic Brain runs on that dataset. NSIL is the repeatable lifecycle: <strong>validate → debate → score → synthesize → deliver</strong>.<br/>
+                            <strong>Validate:</strong> NSIL checks completeness, detects contradictions, and flags uncertainty, ensuring the system doesn’t confidently build on missing or conflicting inputs.<br/>
+                            <strong>Debate:</strong> It runs multi‑perspective reasoning (the specialist personas) to force trade-offs into the open—upside vs downside, speed vs compliance, ambition vs feasibility—so blind spots are surfaced before partners or boards find them.<br/>
+                            <strong>Score:</strong> NSIL applies the proprietary scoring engines and indices to quantify what normally remains vague: probability drivers, pressure points, return ranges, alignment friction, activation risk, and confidence.<br/>
+                            <strong>Synthesize:</strong> It converts the validated, debated, and scored case into structured narrative that matches the math and the evidence, producing sections that decision-makers actually use.<br/>
+                            <strong>Deliver:</strong> It compiles the living draft into a report pack: scorecards, debate outcomes, risk register, execution roadmap, governance model, and next steps.<br/>
+                            The formula suite is the quantitative backbone that the Agentic Brain uses during the “score” phase to translate narrative into explainable numbers. The primary engines (SPI™, RROI™, SEAM™, IVAS™, SCF™) provide the main “hard outputs”: success probability posture, risk-adjusted return logic, stakeholder alignment and friction mapping, activation/timeline feasibility, and an overall confidence grade that becomes the “board answer” (proceed/pause/restructure with reasons). The derivative indices extend that core scoring into specialist diagnostics—so the system can pinpoint why something is strong or weak, what lever to pull, and what will break first under stress. The key point is that the formulas are not decorative metrics; they are the mechanism that turns complex context into measurable drivers and pressure points, which makes the final narrative defensible.<br/>
+                            The algorithm layer is what makes the Agentic Brain fast, consistent, and scalable rather than slow and ad hoc. Algorithms handle the mechanics that allow the same reasoning to run reliably: memory retrieval to reuse relevant prior context and prior decisions, contradiction checks to prevent inconsistent cases from proceeding, parallel execution so multiple analyses can run at once, early stopping so debate and analysis converge efficiently, and structured synthesis that selects the right report template and section plan for the target audience. This is what lets the system operate like an OS: it doesn’t just “generate text,” it manages a workflow, updates the case as inputs change, and keeps outputs consistent across sessions.<br/>
+                            <br/>
+                            <strong>All of this working together is what makes the system different:</strong> the Agentic Brain converts human information into structure; NSIL enforces a repeatable reasoning lifecycle; the formulas quantify drivers and confidence in an explainable way; and the algorithms make the workflow fast, consistent, and memory‑augmented. The result is a proactive intelligence pipeline that continuously turns a person’s inputs into an investor‑grade structured report—not a one-off response—while keeping validation, traceability, and decision usability at the center.
+                        </div>
                     </Section>
-
-                    {/* Removed workflowSteps cards per user request */}
                 </div>
 
                 {/* 3. Inside the Agentic Brain (how it does it) */}
                 <Section>
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-slate-900">Inside the Agentic Brain: How It Works</h2>
-                        <p className="text-slate-600 mt-2 max-w-4xl mx-auto leading-relaxed">
-                            Here’s the hook: the nine steps are not “just a form.” They become a structured dataset that the Agentic Intelligence OS can run on in real time.
-                            As you work in the <strong>live workspace</strong> with your BW Consultant, the system continuously turns messy real‑world inputs into a decision‑grade case — not as a one‑off chat answer, but as an auditable workflow.
-                        </p>
-                        <p className="text-slate-600 mt-3 max-w-4xl mx-auto leading-relaxed">
-                            At a high level, NSIL (the Nexus Strategic Intelligence Layer) executes a repeatable loop — <strong>validate → debate → score → synthesize → deliver</strong> — so your draft intelligence becomes final deliverables without slow consulting cycles.
-                            NSIL and the scoring system were developed within BW Global Advisory to keep outcomes explainable, traceable, and usable — not a black box.
-                        </p>
-                    </div>
-
-                    <div className="mt-8 bg-white border border-slate-200 rounded-xl p-6 text-left">
-                        <div className="text-slate-900 font-bold">How the live workspace becomes a report</div>
-                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                            Every selection you make across the 9 steps (plus uploads) is captured as structured evidence, assumptions, constraints, and objectives. The OS uses that structure to continuously assemble a living draft — the same draft that later compiles into your report pack.
-                        </div>
-                        <ol className="mt-4 space-y-2 text-slate-700 text-sm leading-relaxed list-decimal list-inside">
-                            <li><strong>Structure:</strong> your intake becomes a case model (objectives, constraints, stakeholders, scenarios, risks, execution, governance).</li>
-                            <li><strong>Validate:</strong> the system flags missing constraints, contradictions, and uncertainty so you can see what must be verified.</li>
-                            <li><strong>Debate:</strong> five specialist personas pressure‑test upside, downside, compliance, unit economics, and feasibility.</li>
-                            <li><strong>Stress‑test:</strong> counterfactual “what if?” checks expose fragility, timeline risk, and dependency failures.</li>
-                            <li><strong>Score:</strong> the 21‑formula suite quantifies drivers, pressure points, and confidence from your inputs.</li>
-                            <li><strong>Synthesize:</strong> narratives, section plans, and templates are assembled for your target audience (boards, partners, regulators).</li>
-                            <li><strong>Deliver:</strong> the draft compiles into multi‑page intelligence reports, comparisons, and outreach letters designed to break the ice.</li>
-                        </ol>
-                    </div>
-
-                    <div className="mt-8 bg-slate-50 border border-slate-200 rounded-xl p-6">
-                        <div className="text-slate-900 font-bold text-sm uppercase tracking-widest">What “Agentic” Means Here</div>
-                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                            Agentic AI is not “a chat response.” It is an orchestrated workflow that takes initiative: it asks for missing constraints, challenges assumptions, proposes alternatives, and continuously structures your mandate into decision‑ready outputs.
-                            In practice: the moment you begin engaging with your BW Consultant, the system starts assembling a case — listening, learning your context, and responding immediately.
-                        </div>
-                        <div className="text-slate-700 text-sm mt-2 leading-relaxed">
-                            Your BW Consultant is your personal consultant with 24/7 access: always available for clarification, hypothesis testing, risk framing, and “what would break this?” questions.
-                        </div>
-
-                        <div className="mt-4 bg-white border border-slate-200 rounded-lg p-4">
-                            <div className="text-slate-950 font-bold text-xs uppercase tracking-widest">The Five‑Layer Autonomous Reasoning Stack</div>
-                            <ul className="list-disc list-inside text-slate-700 text-sm mt-2 space-y-1">
-                                <li><strong>The Adversarial Input Shield</strong>: validates inputs and flags “garbage in, garbage out” risk before scoring.</li>
-                                <li><strong>The Multi‑Perspective Reasoning Engine</strong>: runs five personas to eliminate bias and uncover blind spots.</li>
-                                <li><strong>The Counterfactual Lab</strong>: tests “what if?” scenarios to stress‑test robustness and timelines.</li>
-                                <li><strong>The Scoring Engines</strong>: applies the proprietary 21‑formula suite to produce explainable quantitative scores.</li>
-                                <li><strong>The Learning Loop</strong>: retains outcomes and case structure so the system improves over time.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">Five-Layer Reasoning Stack</h4>
-                            <p className="text-xs text-slate-500 mt-1">A layered workflow that validates, debates, simulates counterfactuals, scores, and learns — to reduce bias and improve decision clarity.</p>
-                        </div>
-                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">NSIL (Reasoning Layer)</h4>
-                            <p className="text-xs text-slate-500 mt-1">Developed by BW Global Advisory, NSIL orchestrates the case lifecycle: validation, debate, stress‑testing, scoring, synthesis, and delivery.</p>
-                        </div>
-                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">21-Formula Scoring Suite</h4>
-                            <p className="text-xs text-slate-500 mt-1">5 primary engines + 16 derivative indices: explainable scores that translate narratives into quantified drivers, pressure points, and confidence.</p>
-                        </div>
-                    </div>
-
-                    <div className="mt-6 bg-slate-50 p-5 rounded-lg border border-slate-200 text-left">
-                        <div className="font-semibold text-slate-800">Algorithm Layer (Speed + Consistency)</div>
-                        <div className="text-xs text-slate-600 mt-1 leading-relaxed">
-                            Memory retrieval, contradiction checks, and parallel execution make the same reasoning run fast and repeatably — so the work compounds across sessions and drafts become deliverables.
-                        </div>
-                    </div>
-
-                    <div className="mt-8">
-                        <div className="text-center">
-                            <h3 className="text-xl font-bold text-slate-900">Why Proactive Agentic AI Is Different</h3>
-                            <p className="text-slate-600 mt-2 max-w-4xl mx-auto">
-                                Traditional systems respond to prompts. BW Nexus AI is designed to operate like a digital worker: it structures, challenges, and progresses the work the moment you engage.
-                            </p>
-                        </div>
-                        <div className="mt-6 overflow-x-auto">
-                            <table className="w-full text-sm border border-slate-200 bg-white rounded-lg overflow-hidden">
-                                <thead className="bg-slate-50">
-                                    <tr>
-                                        <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Feature</th>
-                                        <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Reactive AI (Traditional)</th>
-                                        <th className="text-left p-3 font-bold text-slate-900 border-b border-slate-200">Proactive Agentic AI (BW Nexus)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr className="border-b border-slate-200">
-                                        <td className="p-3 font-semibold text-slate-800">Proactive, Not Reactive</td>
-                                        <td className="p-3 text-slate-600">Waits for you to find and input data.</td>
-                                        <td className="p-3 text-slate-600">Engages immediately: clarifies constraints, structures the mandate, and progresses the analysis as you speak with the BW Consultant.</td>
-                                    </tr>
-                                    <tr className="border-b border-slate-200">
-                                        <td className="p-3 font-semibold text-slate-800">Verification‑First</td>
-                                        <td className="p-3 text-slate-600">Can sound confident even when uncertain.</td>
-                                        <td className="p-3 text-slate-600">Flags uncertainty, contradictions, and missing constraints so validation needs are visible and traceable.</td>
-                                    </tr>
-                                    <tr className="border-b border-slate-200">
-                                        <td className="p-3 font-semibold text-slate-800">Memory‑Augmented</td>
-                                        <td className="p-3 text-slate-600">Forgets context between sessions.</td>
-                                        <td className="p-3 text-slate-600">Retains case context (assumptions, debate outcomes, decisions) so learning compounds over time.</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-3 font-semibold text-slate-800">Traceable Outputs</td>
-                                        <td className="p-3 text-slate-600">Often a “black box” response.</td>
-                                        <td className="p-3 text-slate-600">Explainable scores + structured reasoning: drivers, pressure points, and a clear “board answer” pathway.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                     <div className="text-center mt-8">
-                        <div className="text-slate-600 text-sm mb-4 max-w-3xl mx-auto leading-relaxed">
-                            The full NSIL methodology, including SEAM™ and the complete 21-formula suite and algorithm layer, is documented in the Intelligence Reference Paper.
-                            This is the authoritative explanation of what runs inside the Agentic Intelligence OS and how it transforms your 9-step intake into outputs.
-                        </div>
                         <button
                             onClick={() => setShowFormulaModal(true)}
                             className="px-6 py-3 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto shadow-md"
@@ -583,57 +342,13 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
                     </div>
                 </Section>
 
-                {/* 4. The Problem */}
-                <Section>
-                    <h2 className="text-2xl font-bold text-slate-900 text-center">The Core Problem is a Lack of Clarity</h2>
-                    <p className="text-center text-slate-600 mt-2 max-w-2xl mx-auto">
-                        BW Nexus AI is not here to compete with or replace what other tools and advisors normally do. It exists because we saw a gap: too many regions remain misunderstood, and too many high-potential opportunities stay invisible.
-                        That gap creates delay, uncertainty, and missed outcomes — and it funnels attention into large cities while regional economies wait.
-                    </p>
-                    <p className="text-center text-slate-600 mt-3 max-w-3xl mx-auto">
-                        This system saves time and reduces risk by turning unknown and unsure markets into structured, validated, decision-ready cases.
-                        Most importantly, it helps unlock places that hold immense wealth in their people — communities simply seeking a quality of life that many take for granted.
-                    </p>
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">Fragmented Data</h4>
-                            <p className="text-xs text-slate-500 mt-1">No real-time intelligence or single source of truth.</p>
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">Slow Consulting Cycles</h4>
-                            <p className="text-xs text-slate-500 mt-1">Too expensive, non-repeatable, and outdated on arrival.</p>
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <h4 className="font-semibold text-slate-800">No Investor-Grade Narrative</h4>
-                            <p className="text-xs text-slate-500 mt-1">Static documents that don't survive scrutiny or execute.</p>
-                        </div>
-                    </div>
-                </Section>
-
-                {/* 5. The Solution & Core Differentiators */}
-                <Section>
-                    <h2 className="text-2xl font-bold text-slate-900 text-center">A New Way to See, Measure, and Deliver Opportunity</h2>
-                    <p className="text-center text-slate-600 mt-2 max-w-3xl mx-auto">
-                        This is not another dashboard. It is a proactive agentic intelligence OS designed to bridge the Global Understanding Gap by creating clarity where ambiguity normally wins.
-                        It models the ecosystem, stress-tests assumptions, and delivers auditable outputs so you can move faster with confidence — without losing the human context that makes development sustainable.
-                    </p>
-                    <div className="mt-8 grid md:grid-cols-2 gap-x-8 gap-y-10">
-                        <FeatureCard icon={Zap} title="Proactive, Not Reactive" description="This system doesn’t wait for perfect inputs. The second you start talking to your BW Consultant, it listens, clarifies, and begins assembling a structured case — while you work." />
-                        <FeatureCard icon={ShieldAlert} title="Verification-First Outputs" description="The workflow is built to reduce hallucination risk: it flags missing constraints, contradictions, and uncertainty so you can see what must be validated before commitments." />
-                        <FeatureCard icon={Brain} title="Memory-Augmented Intelligence" description="It remembers what you’ve built across a case: assumptions, constraints, debate outcomes, and decisions — so the intelligence compounds instead of resetting each session." />
-                        <FeatureCard icon={Users} title="Adversarial Debate" description="To eliminate bias and uncover blind spots, your strategy is debated by five specialist personas — producing an unvarnished view of upside, downside, compliance, unit economics, and feasibility." />
-                    </div>
-                </Section>
-
-                {/* 6. The Entire Meadow Philosophy */}
+                {/* 7. About BWGA */}
                 <Section>
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-slate-900">The Entire Meadow Philosophy: Seeing the Whole Picture</h2>
+                        <h2 className="text-2xl font-bold text-slate-900">Built by BW Global Advisory</h2>
                         <p className="text-slate-600 mt-2 max-w-4xl mx-auto leading-relaxed">
-                            Most solutions only address the immediate transaction — the “bee and the flower.” But real progress comes from understanding the entire ecosystem: culture, regulation, incentives, capability, timing, and the web of relationships that shape outcomes.
-                        </p>
-                        <p className="text-slate-600 mt-3 max-w-4xl mx-auto leading-relaxed">
-                            BW Nexus AI was created to bridge the gaps that keep high-potential regions and opportunities invisible. Instead of focusing on isolated deals, it models the full context: stakeholders, constraints, and the broader environment. The result is a decision-grade narrative with quantified drivers, pressure points, and actionable next steps—empowering you to act with clarity, not just data.
+                            BW Global Advisory (BWGA) is an independent Australian initiative, founded and solely developed by <strong>Brayden Walls</strong>.
+                            It was born from immersive, on‑the‑ground research in regional Philippines — and the lived reality of what actually breaks deals and stalls development — translated into a repeatable system.
                         </p>
                         <p className="text-slate-600 mt-3 max-w-4xl mx-auto leading-relaxed">
                             <strong>BW Global Advisory is not here to compete with anyone, but to work alongside everyone who wants to change the way the world sees regional cities and the people who live there.</strong> Our mission is to offer a solution that opens doors for all—making it possible for anyone, from anywhere, to access a system that saves time and money, and brings opportunity to those who have been left out. Where once only a few could afford this level of insight, now it is open to all.
@@ -647,7 +362,7 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
                     </div>
                 </Section>
 
-                {/* 7. CTA & Terms of Engagement */}
+                {/* 8. CTA & Terms of Engagement */}
                 <Section>
                     <div className="text-center">
                         <h2 className="text-2xl font-bold text-slate-900">Ready to See with Absolute Clarity?</h2>
@@ -686,7 +401,7 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
 
                             <div className="text-center">
                                 <button
-                                    onClick={onCreateNew}
+                                    onClick={onOpenReportGenerator}
                                     disabled={!accepted}
                                     className="bg-blue-600 text-white py-4 px-10 rounded-lg font-bold text-base uppercase tracking-wider flex items-center justify-center gap-3 hover:bg-blue-700 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-lg hover:shadow-xl disabled:shadow-none group w-full sm:w-auto mx-auto"
                                 >
@@ -715,3 +430,4 @@ const CommandCenter: React.FC<CommandCenterProps> = ({ onCreateNew, ecosystemPul
 };
 
 export default CommandCenter;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

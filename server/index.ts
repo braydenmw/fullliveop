@@ -36,7 +36,7 @@ import searchRoutes from './routes/search.js';
 import autonomousRoutes from './routes/autonomous.js';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(String(process.env.PORT || 3001), 10);
 
 // Security middleware
 app.use(helmet({

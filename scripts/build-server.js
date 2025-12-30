@@ -5,12 +5,9 @@
  * This avoids TypeScript configuration issues with ESM modules.
  */
 
+/* eslint-disable no-undef */
 import * as esbuild from 'esbuild';
 import { existsSync, mkdirSync } from 'fs';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function build() {
   console.log('🔨 Building server for production...');

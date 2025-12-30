@@ -2736,7 +2736,7 @@ const MainCanvas: React.FC<MainCanvasProps> = ({
                                                     >
                                                         <option value="">Select currency...</option>
                                                         {CURRENCY_OPTIONS.map(cur => (
-                                                            <option key={cur.value} value={cur.value}>{cur.label}</option>
+                                                            <option key={cur} value={cur}>{cur}</option>
                                                         ))}
                                                     </select>
                                                 </div>
