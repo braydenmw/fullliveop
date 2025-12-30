@@ -114,6 +114,19 @@ if (process.env.NODE_ENV === 'production') {
     }
   }
   
+  // DEBUG: optionally log static asset lookups (set DEBUG_STATIC=true in env to enable)
+  if (process.env.DEBUG_STATIC === 'true') {
+    app.use((req: Request, _res: Response, next: NextFunction) => {
+      if (req.path.startsWith('/assets') || req.path === '/' || req.path.endsWith('.js') || req.path.endsWith('.css') || req.path.endsWith('index.html')) {
+        const filePath = path.join(distPath, req.path === '/' ? 'index.html' : req.path);
+        const exists = fs.existsSync(filePath);
+        const stat = exists ? fs.statSync(filePath) : null;
+        console.log(`[STATIC DEBUG] ${req.method} ${req.path} -> ${filePath} exists=${exists} size=${stat ? stat.size : 0}`);
+      }
+      next();
+    });
+  }
+  
   app.use(express.static(distPath));
   
   // SPA fallback - serve index.html for all non-API routes
