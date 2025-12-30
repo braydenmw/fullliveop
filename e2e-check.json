@@ -1,8 +1,0 @@
-{
-  "health": {
-    "error": "TypeError: fetch failed"
-  },
-  "frontend": {
-    "error": "TypeError: fetch failed"
-  }
-}
