@@ -1,479 +1,299 @@
+
+
+
 import React, { useState } from 'react';
-import {
-  ArrowRight,
-  BookOpen,
-  Brain,
-  X,
-  Minus,
-  Check,
-  Users,
-  Layers,
-  Scale,
-  Target,
-  Database,
-  FileText,
-  CheckCircle,
-} from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ReportParameters } from '../types';
+import type { EcosystemPulse } from '../services/EventBus';
 import FormulaDeepDiveModal from './FormulaDeepDiveModal';
+import { 
+    Play, CheckCircle2, ShieldAlert, 
+    Globe, Lock, ArrowRight, Layers
+} from 'lucide-react';
 
 interface CommandCenterProps {
-  onOpenReportGenerator: () => void;
+    savedReports: ReportParameters[];
+    onCreateNew: () => void;
+    onLoadReport: (report: ReportParameters) => void;
+    onOpenInstant: () => void;
+    onOpenSimulator: () => void;
+    onOpenReportGenerator?: () => void;
+    ecosystemPulse?: EcosystemPulse | null;
 }
 
-const oldModelFailures = [
-  {
-    title: 'Consulting',
-    description: 'Consulting firms do not produce intelligence systems. They produce human opinion encoded into documents.',
-    cant: [
-      'recompute when assumptions change',
-      'expose hidden contradictions systematically',
-      'quantify confidence in a defensible way',
-      'scale without exploding cost',
-    ],
-    result: 'You pay for hours, not outcomes, and the intelligence is outdated the moment it\'s delivered.',
-  },
-  {
-    title: 'Dashboards & Analytics',
-    description: 'Dashboards require clean data and predefined questions.',
-    cant: [
-      'reason about intent',
-      'capture political or human constraints',
-      'challenge goals themselves',
-      'propose executable paths',
-    ],
-    result: 'You can see what happened, but you have no system to decide what to do next.',
-  },
-  {
-    title: 'AI Chatbots & LLM Tools',
-    description: 'LLMs generate language. They do not own decisions.',
-    cant: [
-      'respond to prompts instead of progressing work',
-      'do not enforce completeness',
-      'cannot defend outputs under scrutiny',
-      'cannot explain why confidence exists',
-    ],
-    result: 'You get a plausible-sounding answer with no accountability, making it unusable for high-stakes decisions.',
-  },
-  {
-    title: 'Simulation & Modeling Software',
-    description: 'Simulation tools work only after experts translate reality into narrow models.',
-    cant: [
-      'break when assumptions shift',
-      'operate in silos',
-      'require rare expertise',
-      'cannot capture mandates as lived by humans',
-    ],
-    result: 'The model breaks when reality changes, and the insights are locked away from those who need them most.',
-  },
-];
+const CommandCenter: React.FC<CommandCenterProps> = ({ 
+    onCreateNew,
+    onOpenSimulator
+}) => {
+    const [accepted, setAccepted] = useState(false);
+    const [showFormulaModal, setShowFormulaModal] = useState(false);
 
-const mandateArchitectureSteps = [
-  {
-    number: '1',
-    title: 'Identity',
-    description: 'Captures org type/stage, capacity bands, and mission ownership/clearance context.',
-    creates: 'entity baseline + constraints anchor for the entire case.'
-  },
-  {
-    number: '2',
-    title: 'Mandate',
-    description: 'Defines vision, horizon, weighted objectives, problem statement, and non‑negotiables.',
-    creates: 'mandate brief + objective weighting for scoring.'
-  },
-  {
-    number: '3',
-    title: 'Market',
-    description: 'Sets geographies, trends, barriers, infrastructure, and opportunity sizing assumptions.',
-    creates: 'market readiness drivers + evidence checklist.'
-  },
-  {
-    number: '4',
-    title: 'Partners',
-    description: 'Defines archetypes, stakeholder influence vs alignment, dependencies, and partner profile.',
-    creates: 'SEAM stakeholder map inputs + partner‑fit criteria.'
-  },
-  {
-    number: '5',
-    title: 'Financial',
-    description: 'Builds scenarios, capex/opex assumptions, incentives, payback and return bands.',
-    creates: 'RROI ranges + scenario table + viability narrative.'
-  },
-  {
-    number: '6',
-    title: 'Risks',
-    description: 'Captures categories, likelihood/impact, mitigation actions, owners, and monitoring.',
-    creates: 'risk register + mitigation plan + red‑flag list.'
-  },
-  {
-    number: '7',
-    title: 'Capabilities',
-    description: 'Assesses team depth, technical maturity, capability gaps, and support needs.',
-    creates: 'capability assessment + gap‑closure plan.'
-  },
-  {
-    number: '8',
-    title: 'Execution',
-    description: 'Defines phased roadmap, gates, owners, budgets, buffers, and activation sequencing.',
-    creates: 'implementation roadmap + IVAS activation profile.'
-  },
-  {
-    number: '9',
-    title: 'Governance',
-    description: 'Sets decision rights, cadence, KPIs, compliance checks, and accountability structure.',
-    creates: 'governance operating model + audit trail backbone.'
-  }
-];
-
-const reportLifecycleSteps = [
-  { title: "Structure", description: "Your intake becomes a case model (objectives, constraints, stakeholders, scenarios, risks, execution, governance)." },
-  { title: "Validate", description: "The system flags missing constraints, contradictions, and uncertainty so you can see what must be verified." },
-  { title: "Debate", description: "Five specialist AI personas pressure‑test upside, downside, compliance, unit economics, and feasibility." },
-  { title: "Stress‑test", description: "Counterfactual “what if?” checks expose fragility, timeline risk, and dependency failures." },
-  { title: "Score", description: "The 21‑formula suite quantifies drivers, pressure points, and confidence from your inputs." },
-  { title: "Synthesize", description: "Narratives, section plans, and templates are assembled for your target audience (boards, partners, regulators)." },
-  { title: "Deliver", description: "The draft compiles into multi‑page intelligence reports, comparisons, and outreach letters designed to break the ice." }
-];
-
-const adaptiveElevationLevels = [
-  {
-    title: "For Beginners",
-    description: "The system provides detailed, step-by-step guidance, explains complex concepts with examples, and proactively suggests fields to consider. The interface is supportive and educational, designed to build capability as well as analyze a plan."
-  },
-  {
-    title: "For Operators",
-    description: "The platform presents structured workflows, operational checklists, and detailed implementation plans. The focus is on execution feasibility, resource allocation, and timeline management."
-  },
-  {
-    title: "For Executives",
-    description: "The system delivers compressed analytics, high-level dashboards, and direct controls. It surfaces the most critical insights and decision points, allowing for rapid assessment and decisive action."
-  }
-];
-
-const formulaSuite = [
-  { name: 'SPI™', description: 'success probability posture' },
-  { name: 'RROI™', description: 'risk-adjusted return logic' },
-  { name: 'SEAM™', description: 'stakeholder alignment & friction' },
-  { name: 'IVAS™', description: 'execution & activation feasibility' },
-  { name: 'SCF™', description: 'system-level confidence grade' },
-];
-
-const whatItProduces = [
-  'a living decision model',
-  'an assumptions & verification register',
-  'quantified confidence posture',
-  'risk and mitigation maps',
-  'execution roadmaps',
-  'governance frameworks',
-  'investor- and regulator-grade documents',
-];
-
-const whoIsItFor = [
-    'Government & Policy Leaders shaping national and regional economic strategy.',
-    'Institutional Investors & DFIs deploying capital into complex markets.',
-    'Corporate Strategists planning market entry, JVs, or supply chain resilience.',
-    'Regional Development Agencies seeking to attract and retain investment with verifiable proof.'
-];
-
-const FailureCard: React.FC<{ title: string; description: string; cant: string[]; result: string }> = ({
-  title,
-  description,
-  cant,
-  result,
-}) => (
-  <div className="bg-white border border-gray-200 rounded-lg p-6 flex flex-col shadow-sm">
-    <h3 className="text-lg font-bold text-gray-900">{title}</h3>
-    <p className="text-sm text-gray-600 mt-1">{description}</p>
-    <ul className="mt-4 space-y-2 text-sm flex-grow">
-      {cant.map(item => (
-        <li key={item} className="flex items-start gap-2">
-          <Minus size={16} className="text-red-500 mt-1 shrink-0" />
-          <span className="text-gray-700">{item}</span>
-        </li>
-      ))}
-    </ul>
-    <p className="text-sm text-gray-800 font-semibold mt-4 pt-4 border-t border-gray-200">
-        Result: <span className="font-normal text-gray-600">{result}</span>
-    </p>
-  </div>
-);
-
-const DiscoveryCard: React.FC<{ number: string; title: string; icon: React.ElementType; children: React.ReactNode }> = ({
-  number,
-  title,
-  icon: Icon,
-  children,
-}) => (
-  <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
-    <div className="flex items-start gap-4">
-      <div className="text-4xl font-black text-gray-300">{number}</div>
-      <div>
-        <div className="flex items-center gap-2 mb-2">
-            <Icon className="w-5 h-5 text-blue-600" />
-            <h3 className="text-xl font-bold text-gray-900">{title}</h3>
-        </div>
-        <div className="text-gray-700 space-y-4">{children}</div>
-      </div>
-    </div>
-  </div>
-);
-
-const CommandCenter: React.FC<CommandCenterProps> = ({ onOpenReportGenerator }) => {
-  const [showFormulaModal, setShowFormulaModal] = useState(false);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-
-  const handleLaunch = () => {
-    if (!acceptedTerms) return;
-    onOpenReportGenerator();
-  };
-
-  return (
-    <>
-      <div className="flex-1 w-full h-full min-h-0 overflow-y-auto bg-gray-100 font-sans text-gray-800 custom-scrollbar">
-        <div className="max-w-5xl mx-auto py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 space-y-16">
-
-          {/* Hero Section */}
-          <section className="text-center">
-            <h1 className="mt-4 text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">
-              BW Global AI
-            </h1>
-            <p className="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
-              A new era for regional development intelligence. Around the world, a persistent Global Understanding Gap obscures genuine opportunity.
-            </p>
-          </section>
-
-          {/* About & Mission */}
-          <section className="bg-white border border-gray-200 p-8 rounded-xl shadow-sm space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">Built by BW Global Advisory</h2>
-            <p className="text-gray-700">
-              BW Global Advisory (BWGA) is an independent Australian initiative, founded and solely developed by Brayden Walls. It was born from immersive, on‑the‑ground research in regional Philippines — and the lived reality of what actually breaks deals and stalls development — translated into a repeatable system.
-            </p>
-            <div className="grid md:grid-cols-2 gap-6 pt-4 border-t border-gray-200">
-                <div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Mission</h3>
-                    <p className="text-gray-700 text-sm">
-                        To bridge the Global Understanding Gap by providing AI‑enhanced intelligence that illuminates regional economic potential, facilitates symbiotic partnerships, and ensures community-centered development outcomes.
-                    </p>
-                </div>
-                <div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Ethical AI‑Human Symbiosis</h3>
-                    <p className="text-gray-700 text-sm">
-                        AI amplifies human insight, but human expertise remains indispensable for context, ethics, and trust. Nexus AI is designed to augment, not replace, human judgment.
-                    </p>
-                </div>
-            </div>
-          </section>
-
-          {/* The Problem */}
-          <section className="space-y-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900">The World’s Most Expensive Failure</h2>
-            <div className="max-w-3xl mx-auto bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
-                <p className="text-sm text-yellow-800">
-                    <span className="font-bold">Case Study:</span> Consider a $500M infrastructure project that stalls for 18 months due to an unforeseen regulatory dependency. Or a multi-billion dollar investment that fails to deliver returns because it was based on a market analysis that was outdated the moment it was printed. This is the cost of the gap.
-                </p>
-            </div>
-            <p className="text-center text-gray-700 max-w-3xl mx-auto pt-4">
-              In the 21st century, the greatest losses in governments, institutions, and regional economies do not come from bad intentions. They come from decisions made under incomplete understanding, static analysis in a dynamic world, and confidence without traceability.
-            </p>
-            <p className="text-center text-gray-700 max-w-3xl mx-auto font-semibold">
-              This mismatch between complex adaptive systems and pre-complexity tools is the single largest unpriced risk in the global economy.
-            </p>
-          </section>
-
-          {/* Why Old Models Fail */}
-          <section className="space-y-8">
-            <h2 className="text-3xl font-bold text-center text-gray-900">Why the Old Model Cannot Be Fixed</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {oldModelFailures.map(f => (
-                <FailureCard key={f.title} {...f} />
-              ))}
-            </div>
-          </section>
-
-          {/* The Unsolved Problem */}
-          <section className="text-center space-y-6 bg-gray-800 text-white p-12 rounded-xl shadow-lg">
-            <h2 className="text-3xl font-bold">The Unsolved Problem</h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
-              Every consequential decision starts with a human mandate: goals in natural language, competing objectives, political realities, and unknowns.
-            </p>
-            <p className="text-2xl font-bold text-blue-400 tracking-tight">
-              Fatal truth: Human intent is not computable.
-            </p>
-            <p className="text-2xl font-bold tracking-tight">Until now.</p>
-          </section>
-
-          {/* The Core Discoveries */}
-          <section className="space-y-12">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-900">The Core Discovery</h2>
-              <p className="text-gray-700 mt-2 max-w-2xl mx-auto">
-                The breakthrough was not more data. It was realizing that intent itself must be structured—without losing reality—before intelligence can exist.
-              </p>
-            </div>
-
-            <DiscoveryCard number="01" title="The Computable Mandate" icon={Database}>
-              <p>BW Global AI introduces the first universal method for converting a human mandate into a complete, machine-legible intelligence dataset.</p>
-              <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm">
-                <span className="font-semibold">This is not form-filling.</span> It is a guided, Socratic dialogue with the system—a live consultation where each answer builds upon the last, revealing connections and constraints you hadn't considered.
-              </div>
-              <div className="mt-4">
-                <h4 className="font-semibold text-gray-800 mb-2">The 9-Step Mandate Architecture</h4>
-                <p className="text-sm text-gray-600 mb-4">Each step captures a different class of decision variable. Together, they form a closed system.</p>
-                <div className="grid md:grid-cols-3 gap-4">
-                  {mandateArchitectureSteps.map(step => (
-                    <div key={step.number} className="bg-gray-50 border border-gray-200 p-4 rounded-lg space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="flex items-center justify-center w-6 h-6 bg-gray-200 text-gray-700 font-bold text-xs rounded-full">{step.number}</span>
-                        <h5 className="font-bold text-gray-800 text-sm">{step.title}</h5>
-                      </div>
-                      <p className="text-xs text-gray-600">{step.description}</p>
-                      <p className="text-xs text-blue-700 font-semibold pt-2 border-t border-gray-200">Creates: {step.creates}</p>
+    return (
+        <div className="h-full w-full flex-1 bg-stone-50 flex items-start justify-center p-6 pt-16 pb-24 font-sans overflow-y-auto">
+            <div className="max-w-6xl w-full bg-white shadow-2xl border border-stone-200 rounded-sm overflow-hidden flex flex-col">
+                {/* 1. Header & Catchment (Hero) */}
+                <section className="bg-bw-navy text-white p-12">
+                    <div className="flex items-center gap-2 text-bw-gold font-bold tracking-widest text-xs uppercase mb-4">
+                        <Layers size={14} /> BW Global AI Command Center
                     </div>
-                  ))}
-                </div>
-              </div>
-              <p className="mt-4 font-semibold">This has never existed before.</p>
-            </DiscoveryCard>
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2">A National Strategic Asset</h1>
+                    <p className="text-bw-gold font-semibold mb-6">A sovereign-grade intelligence platform designed to enhance the quality and speed of high-stakes decision-making.</p>
+                    <div className="text-gray-200 text-sm leading-relaxed border-l-2 border-bw-gold pl-6 max-w-3xl">
+                        <p className="mb-2">Our ultimate vision is for BW Nexus AI to be deployed as a shared, national strategic asset — a secure, sovereign-grade intelligence platform utilized across government, companies, and banking organizations of any size to enhance the quality and speed of high-stakes decision-making.</p>
+                        <p>Designed to create partnerships across sectors and geographies, BW Nexus AI is 100% regional-focused. It reduces bottlenecks in big cities by channeling growth to high-potential regions where capacity can be built deliberately and equitably.</p>
+                    </div>
+                </section>
 
-            <DiscoveryCard number="02" title="NSIL — Nexus Strategic Intelligence Layer" icon={Layers}>
-              <p>Once intent becomes computable, a second problem emerges: How do you prevent false confidence? NSIL is the first reasoning governance layer for strategic intelligence. It is a proactive, agentic digital worker that begins reasoning the moment you start engaging.</p>
-              <div className="my-4 text-center font-semibold text-blue-700 tracking-widest">
-                Validate → Debate → Score → Synthesize → Deliver
-              </div>
-              <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm">
-                <span className="font-semibold">Debate:</span> Our five specialist AI personas (The Skeptic, The Advocate, The Regulator, The Accountant, and The Operator) pressure-test the case from every angle, forcing trade-offs into the open before reality does.
-              </div>
-              <p className="mt-4 font-semibold">No existing system governs reasoning this way.</p>
-            </DiscoveryCard>
+                {/* 2. The Problem */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">The Strategic Imperative: Decision-Making in a Complex World</h2>
+                    <div className="space-y-3 text-stone-700 text-sm max-w-4xl">
+                        <p>In the 21st century, governments and institutions face a landscape of unprecedented complexity. Decisions concerning economic policy, foreign investment, national security, and regional development are fraught with interconnected risks, hidden variables, and the pervasive threat of cognitive bias.</p>
+                        <p>The traditional tools for navigating this landscape—months-long consulting engagements, static reports, and siloed expert opinions—are proving increasingly inadequate. They are slow, prohibitively expensive, and often produce a single-point forecast that fails to account for real-world volatility.</p>
+                        <p>This results in missed opportunities, unforeseen crises, and the inefficient allocation of a nation's most precious resources: its capital, its talent, and its time.</p>
+                        <p className="font-semibold">The Imperative: A new paradigm for decision-making is required—one that is dynamic, rigorous, transparent, and adaptive.</p>
+                    </div>
+                </section>
 
-            <DiscoveryCard number="03" title="The Agentic Brain" icon={Brain}>
-              <p>Most systems wait for instructions. BW Global AI works. The Agentic Brain is a persistent digital worker that owns the case, progresses it continuously, challenges weak assumptions, and refuses to proceed on incomplete logic.</p>
-              <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm">
-                This means the system anticipates your next question, prepares analyses in the background, and acts as a proactive member of your team, not a passive tool waiting for a command.
-              </div>
-              <p className="mt-4 font-semibold">This is agentic AI applied not to tasks—but to judgment. That distinction is new.</p>
-            </DiscoveryCard>
+                {/* 3. Proof of Innovation */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">The Unsolved Problem</h2>
+                    <div className="space-y-3 text-stone-700 text-sm max-w-4xl">
+                        <p><span className="font-semibold">Every consequential decision starts with a human mandate.</span> <span className="text-stone-900 font-semibold">Fatal truth:</span> Human intent is not computable.</p>
+                        <p className="font-semibold">The Shift: Until now.</p>
+                        <p>BW Nexus AI is more than an incremental improvement on existing analytical tools; it represents a fundamental leap forward in decision-making technology. By fusing a suite of proprietary mathematical engines with a multi-layered autonomous reasoning architecture, it provides a capability that has, until now, not existed: an active, adversarial, and continuously learning AI reasoning partner.</p>
+                        <p>It is a system designed to combat bias, embrace uncertainty, and deliver auditable, explainable, and actionable strategic intelligence. It is a world-first.</p>
+                    </div>
+                </section>
 
-            <DiscoveryCard number="04" title="The 21-Formula Intelligence Engine" icon={Scale}>
-              <p>Confidence has always been emotional. BW Global AI makes it explainable. The proprietary 21-formula suite translates context into measurable drivers.</p>
-              <div className="grid grid-cols-2 gap-4 my-4">
-                {formulaSuite.map(f => (
-                  <div key={f.name} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                    <div className="font-bold text-gray-800">{f.name}</div>
-                    <div className="text-xs text-gray-600">{f.description}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm">
-                <span className="font-semibold">For instance:</span> The SEAM™ (Stakeholder Ecosystem & Alignment Map) score doesn't just list stakeholders; it quantifies the 'friction cost' of misalignment, allowing you to predict potential delays and budget for engagement.
-              </div>
-              <p className="mt-4">These formulas do not predict the future. They expose fragility, leverage, and failure points now. That is what decision-makers need.</p>
-              <div className="mt-6 text-center">
-                <button
-                  type="button"
-                  onClick={() => setShowFormulaModal(true)}
-                  className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-6 py-2 text-sm font-semibold text-blue-800 hover:bg-blue-100 transition-colors"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  <span>Explore Full Methodology & 21 Formulas</span>
-                </button>
-              </div>
-            </DiscoveryCard>
-          </section>
+                {/* 4. The Solution */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">Introducing BW Nexus AI</h2>
+                    <p className="text-stone-600 text-sm mb-3">A Strategic Intelligence and Execution Platform.</p>
+                    <div className="space-y-3 text-stone-700 text-sm max-w-4xl">
+                        <p>BW Nexus AI is best understood as a hybrid platform that merges the analytical mind of a top-tier consulting firm with the productive power of a high-end document automation factory. It is a unified environment designed to guide a user from the earliest stages of strategic conception all the way through to the generation of execution-ready deliverables.</p>
+                        <p><span className="font-semibold">Core Function:</span> It transforms a user's inputs—their mission, constraints, risk appetite, and strategic goals—into a live, interactive decision model. The platform does not simply store data; it reads it, simulates outcomes, stress-tests assumptions, finds hidden risks, and proposes auditable, evidence-backed fixes.</p>
+                    </div>
+                </section>
 
-          {/* What This Produces */}
-          <section className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">What This Produces</h2>
-            <p className="text-gray-700 mb-6">From a single mandate, BW Global AI generates:</p>
-            <ul className="grid grid-cols-2 gap-4 text-gray-800">
-              {whatItProduces.map(item => (
-                <li key={item} className="flex items-center gap-2">
-                  <Check size={16} className="text-green-500" /> {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm">
-              <span className="font-semibold">Change one assumption—everything updates,</span> because the entire case is a living, interconnected model, not a static document. Change a budget constraint, and the risk profile and execution timeline instantly re-calculate.
+                {/* 5. Who We Are */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">Built by BW Global Advisory</h2>
+                    <div className="space-y-3 text-stone-700 text-sm max-w-4xl">
+                        <p>BW Global Advisory (BWGA) is an independent Australian initiative, founded and solely developed by Brayden Walls. It was born from immersive, on‑the‑ground research in regional Philippines — and the lived reality of what actually breaks deals and stalls development — translated into a repeatable system.</p>
+                        <p><span className="font-semibold">Mission:</span> To bridge the Global Understanding Gap by providing AI‑enhanced intelligence that illuminates regional economic potential, facilitates symbiotic partnerships, and ensures community-centered development outcomes.</p>
+                    </div>
+                </section>
+
+                {/* 6. How We Do This (NSIL) */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">The Core Innovation: Nexus Strategic Intelligence Layer (NSIL)</h2>
+                    <p className="text-stone-600 text-sm mb-3">NSIL treats every business plan, investment thesis, or policy initiative as a living simulation.</p>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="rounded-sm border border-stone-200 p-6 bg-stone-50">
+                            <h3 className="text-sm font-bold text-stone-900 mb-2">The 5-Layer Autonomous Reasoning Stack</h3>
+                            <ul className="list-disc pl-5 text-sm text-stone-700 space-y-2">
+                                <li><span className="font-semibold">Adversarial Input Shield:</span> Cross-references claims against external data and flags contradictions before analysis begins.</li>
+                                <li><span className="font-semibold">Multi-Perspective Reasoning Engine:</span> Spawns five specialist AI personas to debate the plan in parallel.</li>
+                                <li><span className="font-semibold">Counterfactual Lab:</span> Simulates "what if?" scenarios to test robustness against market shifts or partner failures.</li>
+                                <li><span className="font-semibold">Scoring Engines:</span> Runs 21 proprietary mathematical formulas (SPI™, RROI™, SEAM™) to produce hard quantitative scores.</li>
+                                <li><span className="font-semibold">Learning Loop:</span> Tracks decisions and outcomes to recalibrate accuracy over time.</li>
+                            </ul>
+                        </div>
+                        <div className="rounded-sm border border-stone-200 p-6 bg-stone-50">
+                            <h3 className="text-sm font-bold text-stone-900 mb-2">The 5 AI Personas (The Debate Team)</h3>
+                            <ul className="list-disc pl-5 text-sm text-stone-700 space-y-2">
+                                <li><span className="font-semibold">The Skeptic:</span> Finds deal-killers and hidden downside risks.</li>
+                                <li><span className="font-semibold">The Advocate:</span> Identifies hidden synergies and value levers.</li>
+                                <li><span className="font-semibold">The Regulator:</span> Checks legality, ethics, and compliance.</li>
+                                <li><span className="font-semibold">The Accountant:</span> Validates financial viability and unit economics.</li>
+                                <li><span className="font-semibold">The Operator:</span> Tests execution feasibility and team capability.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="mt-6">
+                        <p className="text-stone-700 text-sm max-w-3xl">NSIL + the Agentic Brain constitute a world-first decision-making architecture: governed, adversarial, continuously learning, and fully auditable.</p>
+                        <div className="mt-4 text-center">
+                            <button
+                                type="button"
+                                onClick={() => setShowFormulaModal(true)}
+                                className="inline-flex items-center gap-2 rounded-sm border border-blue-200 bg-blue-50 px-6 py-3 text-sm font-bold text-blue-800 hover:bg-blue-100 transition-colors"
+                            >
+                                <span>Explore Full Methodology &amp; 21 Formulas</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 6a. Agentic AI — The Nexus Brain */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">Agentic AI: How the Brain Works with NSIL</h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="rounded-sm border border-stone-200 p-6 bg-stone-50">
+                            <h3 className="text-sm font-bold text-stone-900 mb-2">Agentic Brain Operations</h3>
+                            <ul className="list-disc pl-5 text-sm text-stone-700 space-y-2">
+                                <li>Owns the case: persists context, prepares analyses in the background, and advances work without waiting for prompts.</li>
+                                <li>Prepares proactively: anticipates next questions, assembles evidence, and surfaces contradictions for review.</li>
+                                <li>Maintains traceability: writes structured logs so every judgment has a provenance trail.</li>
+                            </ul>
+                        </div>
+                        <div className="rounded-sm border border-stone-200 p-6 bg-stone-50">
+                            <h3 className="text-sm font-bold text-stone-900 mb-2">Interplay: NSIL + Agentic Brain</h3>
+                            <ul className="list-disc pl-5 text-sm text-stone-700 space-y-2">
+                                <li>NSIL governs reasoning quality (debate, counterfactuals, scoring, learning); the Agentic Brain executes this governance continuously.</li>
+                                <li>Inputs flow through the Adversarial Shield → Personas Debate → Counterfactual Lab → Scoring Engines, while the Brain orchestrates tasks.</li>
+                                <li>Outputs are explainable and auditable: every score links to assumptions, every recommendation cites sources.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="mt-6 max-w-4xl text-stone-700 text-sm space-y-3">
+                        <p><span className="font-semibold">The Agentic Brain:</span> Most systems wait for instructions. BW Global AI works. The Agentic Brain is a persistent digital worker that owns the case, progresses it continuously, challenges weak assumptions, and refuses to proceed on incomplete logic.</p>
+                        <p>This means the system anticipates your next question, prepares analyses in the background, and acts as a proactive member of your team, not a passive tool waiting for a command.</p>
+                        <p className="font-semibold">This is agentic AI applied not to tasks — but to judgment. That distinction is new.</p>
+                        <p>It is not a black box: every step is governed by NSIL’s explicit reasoning protocols and is fully traceable. It is a self‑learning system that hunts for information, surfaces contradictions, and improves its own accuracy over time.</p>
+                    </div>
+                </section>
+
+                {/* 7. How To Use It (9-Section Framework) */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">Rigor from the Start: The 9-Section Framework</h2>
+                    <p className="text-stone-600 text-sm mb-3">The quality of any analysis is dictated by the quality of its inputs.</p>
+                    <div className="grid md:grid-cols-3 gap-4">
+                        {[
+                            'Identity & Foundation: Organizational credibility.',
+                            'Mandate & Strategy: Vision and success measures.',
+                            'Market & Context: External forces.',
+                            'Partners & Ecosystem: Stakeholder fit.',
+                            'Financial Model: Multi-scenario viability.',
+                            'Risk & Mitigation: Systematic risk planning.',
+                            'Resources & Capability: Execution readiness.',
+                            'Execution Plan: Gated roadmap.',
+                            'Governance & Monitoring: Decision structures.'
+                        ].map((item, i) => (
+                            <div key={i} className="rounded-sm border border-stone-200 p-4 bg-stone-50 text-sm text-stone-700">{item}</div>
+                        ))}
+                    </div>
+                    <div className="mt-6 grid md:grid-cols-3 gap-4">
+                        {[
+                            'For Beginners: Step-by-step educational guidance.',
+                            'For Operators: Structured workflows and checklists.',
+                            'For Executives: Compressed analytics and decision dashboards.'
+                        ].map((item, i) => (
+                            <div key={i} className="rounded-sm border border-stone-200 p-4 bg-white text-xs text-stone-700">{item}</div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* 8. Outcomes */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">The Document Factory: From Analysis to Action</h2>
+                    <p className="text-stone-600 text-sm mb-3">A validated strategy is useless if it remains trapped in a dashboard.</p>
+                    <div className="rounded-sm border border-stone-200 p-6 bg-white mb-6">
+                        <p className="text-sm text-stone-700">Outputs are <span className="font-semibold">live documents</span>: change a single assumption, and the entire document set — risks, scores, timelines, and instrument drafts — recalibrates instantly. A BW Consultant accompanies the journey, providing guided interactions and structured assistance at every step.</p>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="rounded-sm border border-stone-200 p-6 bg-stone-50">
+                            <h3 className="text-sm font-bold text-stone-900 mb-2">Capabilities</h3>
+                            <p className="text-sm text-stone-700">The platform can auto-generate over 200 unique document types and 150 letter templates across 14 categories, including:</p>
+                        </div>
+                        <div className="rounded-sm border border-stone-200 p-6 bg-stone-50">
+                            <ul className="list-disc pl-5 text-sm text-stone-700 space-y-2">
+                                <li><span className="font-semibold">Foundation:</span> LOIs, MOUs, NDAs, Term Sheets.</li>
+                                <li><span className="font-semibold">Strategic:</span> Business Cases, Feasibility Studies, White Papers.</li>
+                                <li><span className="font-semibold">Financial:</span> Financial Models, Valuation Reports.</li>
+                                <li><span className="font-semibold">Risk:</span> Due Diligence Reports, Sanctions Screening.</li>
+                                <li><span className="font-semibold">Government:</span> Policy Briefs, Cabinet Memos.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 9. Technology & Differentiation */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">Why The Old Model Cannot Be Fixed</h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="rounded-sm border border-stone-200 p-6 bg-stone-50">
+                            <h3 className="text-sm font-bold text-stone-900 mb-2">The Problem Domain</h3>
+                            <ul className="list-disc pl-5 text-sm text-stone-700 space-y-2">
+                                <li>Consulting: High cost, high latency. Produces static reports that are obsolete upon delivery.</li>
+                                <li>Human Bias: Vulnerable to groupthink, confirmation bias, and misaligned incentives.</li>
+                                <li>The "Invisible Giant": Traditional models overlook regional opportunities due to a lack of granular data.</li>
+                                <li>Static Tools: Spreadsheets and slides cannot react to new information or stress-test themselves.</li>
+                            </ul>
+                        </div>
+                        <div className="rounded-sm border border-stone-200 p-6 bg-stone-50">
+                            <h3 className="text-sm font-bold text-stone-900 mb-2">The BW Difference</h3>
+                            <p className="text-sm text-stone-700">BW Nexus AI treats a strategic plan not as a document, but as a living, dynamic simulation. Change one input, and the entire system—risks, scores, documents—recalibrates instantly. It offers an active, adversarial, and continuously learning AI reasoning partner that is available 24/7.</p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 10. Target Audience & Call to Action */}
+                <section className="p-10 border-t border-stone-200">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-4">Who This Is For</h2>
+                    <div className="grid md:grid-cols-2 gap-4 text-sm text-stone-700">
+                        {[
+                            'Government & Policy Leaders: Shaping national economic strategy.',
+                            'Institutional Investors: Deploying capital into complex markets.',
+                            'Corporate Strategists: Planning market entry and JVs.',
+                            'Regional Development Agencies: Attracting investment with verifiable proof.',
+                            'Banks & Financial Institutions: From local credit unions to global banks.',
+                            'Companies of any size: SMEs to multinationals pursuing regional expansion.',
+                            'NGOs & Development Finance: Structuring public-private partnerships with provable outcomes.'
+                        ].map((item, i) => (
+                            <div key={i} className="rounded-sm border border-stone-200 p-4 bg-white">{item}</div>
+                        ))}
+                    </div>
+                    <p className="text-stone-700 text-xs mt-3">Built to create partnerships across sectors and geographies, with a 100% regional focus to reduce bottlenecks in big cities.</p>
+                    <p className="text-stone-600 text-xs mt-3">Start your journey: define your mandate, then let the system show you what’s possible.</p>
+                </section>
+
+                {/* Terms of Engagement & Compliance */}
+                <section className="p-10 border-t border-stone-200">
+                    <h3 className="text-bw-navy font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+                        <ShieldAlert size={16} className="text-bw-gold" /> Terms of Engagement & Compliance
+                    </h3>
+                    <div className="space-y-4 text-xs text-stone-700 bg-white p-6 rounded-sm border border-stone-200 max-h-[320px] overflow-y-auto shadow-inner">
+                        <p><strong className="text-stone-900 block mb-1">1. Strategic Decision Support</strong> BW Nexus AI is a sovereign-grade decision support platform. All outputs are advisory and must be validated by qualified professionals before binding commitments.</p>
+                        <p><strong className="text-stone-900 block mb-1">2. Reasoning Governance (NSIL)</strong> The NSIL layer governs analysis via adversarial input screening, multi-perspective debate, counterfactual simulation, scoring engines, and a learning loop. This prevents false confidence and enforces explainability.</p>
+                        <p><strong className="text-stone-900 block mb-1">3. Data Privacy & Sovereignty</strong> Strict compliance with data sovereignty and privacy laws. Sensitive intents and operational data are segregated. No user-specific data trains public models.</p>
+                        <p><strong className="text-stone-900 block mb-1">4. Model Limits & Accountability</strong> The 21-formula suite (SPI™, RROI™, SEAM™, etc.) exposes fragility and leverage; it does not predict the future. Users retain final accountability for decisions.</p>
+                        <p><strong className="text-stone-900 block mb-1">5. Compliance & Ethics</strong> The Regulator persona continuously checks legality, ethics, sanctions, and policy alignment. Outputs include audit trails for traceability.</p>
+                        <p><strong className="text-stone-900 block mb-1">6. Liability</strong> To the extent permitted by law, BW Global Advisory shall not be liable for indirect or consequential losses arising from use of the platform. Total liability is limited to fees paid for the specific service.</p>
+                    </div>
+                    <div className="mt-6 flex flex-col gap-4">
+                        <label className="flex items-center gap-3 cursor-pointer select-none group">
+                            <div className={`w-5 h-5 border rounded flex items-center justify-center transition-all ${accepted ? 'bg-bw-navy border-bw-navy' : 'bg-white border-stone-300 group-hover:border-bw-navy'}`}>
+                                {accepted && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+                            </div>
+                            <input type="checkbox" className="hidden" checked={accepted} onChange={e => setAccepted(e.target.checked)} />
+                            <span className="text-sm font-bold text-stone-700">I have read and accept the Terms of Engagement.</span>
+                        </label>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <button 
+                                onClick={onCreateNew}
+                                disabled={!accepted}
+                                className="flex-1 bg-bw-navy text-white py-4 px-6 rounded-sm font-bold text-sm uppercase tracking-wide flex items-center justify-between gap-2 hover:bg-bw-gold hover:text-bw-navy transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg group"
+                            >
+                                <span className="flex items-center gap-3">{!accepted ? <Lock size={16} /> : <Play size={16} />} Define Your Mandate</span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </button>
+                            <button 
+                                onClick={onOpenSimulator}
+                                className="flex-1 bg-white text-stone-600 border border-stone-300 py-4 px-6 rounded-sm font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 hover:bg-stone-100 hover:text-stone-900 transition-all"
+                            >
+                                <Globe size={14} />
+                                View System Monitor
+                            </button>
+                        </div>
+                    </div>
+                    <p className="text-stone-500 text-[11px] mt-2">© 2026 BW Global Advisory. Nexus Intelligence OS v6.0 — Melbourne, Australia.</p>
+                </section>
+                {/* Modal render */}
+                <FormulaDeepDiveModal isOpen={showFormulaModal} onClose={() => setShowFormulaModal(false)} />
             </div>
-            <p className="mt-4 text-center font-semibold text-gray-800">This was not previously possible.</p>
-          </section>
-
-          {/* Who This Is For */}
-          <section className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Who This Is For</h2>
-            <p className="text-gray-700 mb-6">BW Nexus AI is not for everyone. It is built for leaders and teams who make consequential decisions in high-stakes environments:</p>
-            <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                {whoIsItFor.map((who, i) => <li key={i}>{who}</li>)}
-            </ul>
-          </section>
-
-          {/* About */}
-          <section className="text-center space-y-4 border-t border-gray-200 pt-12">
-            <h3 className="text-xl font-semibold text-gray-900">Built by BW Global Advisory</h3>
-            <p className="text-gray-700 max-w-2xl mx-auto">
-              BW Global AI is an independent Australian initiative founded and solely developed by Brayden Walls. It was born from immersive, on-the-ground experience in regional Philippines—where theory met reality, and existing systems failed.
-            </p>
-          </section>
-
-          {/* Closing Manifesto */}
-          <section className="text-center space-y-6 border-y border-gray-200 py-16">
-            <h2 className="text-4xl font-bold text-gray-900">This Is the Moment.</h2>
-            <p className="text-gray-700 text-lg">This capability did not exist. Now it does.</p>
-            <p className="text-xl text-blue-700 font-semibold">
-              The only question left is: What becomes possible when intent itself becomes computable?
-            </p>
-          </section>
-
-          {/* CTA */}
-          <section className="text-center space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">Ready to See with Absolute Clarity?</h2>
-            <p className="text-gray-700">Start your journey: define your mandate, then let the system show you what’s possible. The BW Consultant reacts immediately as you engage — listening, learning context, and responding with structured intelligence.</p>
-            <p className="text-gray-700 text-sm mt-2">To proceed, please review and accept the Terms of Engagement. This ensures you understand the scope, capabilities, and limitations of the platform.</p>
-            
-            <div className="border border-gray-200 rounded-lg p-4 h-64 overflow-y-auto custom-scrollbar bg-white mt-4">
-              <h3 className="font-bold text-gray-900 mb-2">Terms of Engagement & Business Disclaimer</h3>
-              <div className="prose prose-sm max-w-none text-gray-600">
-                <h4>Important Business Disclaimer</h4>
-                <p>Strategic Intelligence Briefs are prepared by BW Global Advisory (ABN 55 978 113 300) using our proprietary AI-Human analytical capabilities. Analysis is based on publicly available data, BWGA's AI Economic Strategy Engine (Nexus v6.0), and regional insights gathered by our advisory team. While every effort is made to ensure accuracy at the time of generation, all briefs are illustrative, intended for strategic discussion, and do not constitute financial, legal, or investment advice. Users are advised to conduct comprehensive independent due diligence before making any investment or partnership decisions.</p>
-                <h4>Terms of Engagement</h4>
-                <ol>
-                  <li><strong>Acceptance & Commercial License:</strong> By accessing the BW Global AI platform (v6.0), you acknowledge and accept these Terms of Engagement in full. Upon completion of payment, Strategic Intelligence Reports and associated deliverables become the intellectual property of the commissioning party. BW Global Advisory (ABN 55 978 113 300) retains rights to anonymized, aggregated data solely for system improvement and research purposes.</li>
-                  <li><strong>Decision Support Tool — Not Financial Advice:</strong> The Nexus OS provides probabilistic insights, data-driven analysis, and strategic recommendations. It is expressly NOT a final decision authority and does NOT constitute financial, legal, tax, or investment advice. All outputs are advisory in nature. Users must exercise independent judgment, verify all critical findings, and seek qualified professional advice before making binding commitments.</li>
-                  <li><strong>Due Diligence Requirement:</strong> Users acknowledge their responsibility to conduct comprehensive independent due diligence before acting on any analysis, recommendation, or insight provided by this platform. BW Global Advisory provides strategic intelligence to inform decisions—not to replace the professional judgment of qualified advisors.</li>
-                  <li><strong>Proprietary Intellectual Property:</strong> All system architecture, algorithms, formulas, workflows, user interfaces, and the unique “agentic” methodology—including but not limited to SPI™, RROI™, SEAM™, IVAS™, SCF™, and the entire BW Global AI platform—are the exclusive and proprietary intellectual property of BW Global Advisory. Any attempt to copy, reverse engineer, decompile, or create derivative works is strictly prohibited.</li>
-                  <li><strong>Limitation of Liability:</strong> To the maximum extent permitted by applicable law, BW Global Advisory, its directors, employees, and agents shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages from use of the platform or reliance on its outputs. In all circumstances, total aggregate liability shall not exceed fees actually paid for the specific report or service in question.</li>
-                </ol>
-                <p className="text-xs mt-4">Terms Version 6.0 | Effective December 2025 | BW Global Advisory (ABN 55 978 113 300) | Sydney, Australia</p>
-              </div>
-            </div>
-
-            <label className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 max-w-md mx-auto">
-              <input
-                type="checkbox"
-                checked={acceptedTerms}
-                onChange={event => setAcceptedTerms(event.target.checked)}
-                className="mt-1 h-5 w-5 accent-blue-600"
-              />
-              <span className="text-gray-700 text-sm text-left">I have read and accept the Terms of Engagement.</span>
-            </label>
-
-            <button
-              type="button"
-              onClick={handleLaunch}
-              disabled={!acceptedTerms}
-              className="inline-flex items-center gap-3 rounded-lg bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/40 disabled:bg-gray-300 disabled:shadow-none disabled:cursor-not-allowed"
-            >
-              <span>Define Your Mandate</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            <p className="text-xs text-gray-500">© 2025 BW Global Advisory (ABN 55 978 113 300). All Rights Reserved. Nexus Intelligence OS v6.0 | Melbourne, Australia</p>
-          </section>
         </div>
-      </div>
-
-      <FormulaDeepDiveModal isOpen={showFormulaModal} onClose={() => setShowFormulaModal(false)} />
-    </>
-  );
+    );
 };
 
 export default CommandCenter;
+
